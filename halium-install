@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 function convert_rootfs() {
 	dd if=/dev/zero of=rootfs.img seek=500K bs=4096 count=0
