@@ -7,7 +7,6 @@ function convert_rootfs() {
 	sudo mount rootfs.img rootfs
 	cd rootfs
 	sudo tar -xf ../$ROOTFS_TAR
-	sync
 	cd ..
 }
 
