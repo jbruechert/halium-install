@@ -1,0 +1,59 @@
+#! /bin/bash
+
+function convert_rootfs() {
+	dd if=/dev/zero of=rootfs.img seek=500K bs=4096 count=0
+	sudo mkfs.ext4 -F rootfs.img
+	mkdir rootfs
+	sudo mount rootfs.img rootfs
+	cd rootfs
+	sudo tar -xf ../$ROOTFS_TAR
+	sync
+	cd ..
+}
+
+function convert_androidimage() {
+	simg2img $AND_IMAGE system.img
+	sudo resize2fs -M system.img
+}
+
+function clean() {
+	sudo umount rootfs
+	
+	# Delete created files from last install
+	sudo rm rootfs -rf
+	
+	sudo rm rootfs.img
+	sudo rm system.img
+}
+
+function flash() {
+	adb push system.img /data/system.img
+	adb push rootfs.img /data/rootfs.img
+}
+
+export ROOTFS_TAR=$1
+export AND_IMAGE=$2
+
+echo Chosen rootfs is $ROOTFS_TAR
+echo Chosen android image is $AND_IMAGE
+
+echo "Writing rootfs into mountable image"
+echo
+echo "************************************"
+convert_rootfs
+echo "************************************"
+
+echo "Writing android image into mountable image"
+echo
+echo "************************************"
+convert_androidimage
+echo "************************************"
+
+echo "Pushing rootfs and android image to /data via ADB"
+echo
+echo "************************************"
+flash
+echo "************************************"
+
+echo "Cleaning up host"
+clean
