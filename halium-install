@@ -1,18 +1,27 @@
 #!/bin/bash
 
+# Plase make sure you have qemu-user-static, qemu-system-arm, sudo and simg2img installed before running this script!
+
 function convert_rootfs() {
 	dd if=/dev/zero of=rootfs.img seek=500K bs=4096 count=0
 	sudo mkfs.ext4 -F rootfs.img
 	mkdir rootfs
 	sudo mount rootfs.img rootfs
-	cd rootfs
-	sudo tar -xf ../$ROOTFS_TAR
-	cd ..
+	sudo tar -xf $ROOTFS_TAR -C rootfs
 }
 
 function convert_androidimage() {
 	simg2img $AND_IMAGE system.img
 	sudo resize2fs -M system.img
+}
+
+function setup_ssh() {
+	sudo cp $(which qemu-arm-static) rootfs/usr/bin
+	
+	sudo chroot rootfs passwd root
+	sudo LANG=C chroot rootfs dpkg-reconfigure dropbear-run
+	
+	sudo rm rootfs/usr/bin/qemu-arm-static
 }
 
 function clean() {
@@ -46,6 +55,12 @@ echo "Writing android image into mountable image"
 echo
 echo "************************************"
 convert_androidimage
+echo "************************************"
+
+echo "Setting up SSH server"
+echo
+echo "************************************"
+setup_ssh
 echo "************************************"
 
 echo "Pushing rootfs and android image to /data via ADB"
