@@ -2,6 +2,20 @@
 
 # Plase make sure you have qemu-user-static, qemu-system-arm, sudo and simg2img installed before running this script!
 
+function spinner() {
+	local pid=$1
+	local delay=0.75
+	local spinstr='|/-\'
+	while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+		local temp=${spinstr#?}
+		printf " [%c]  " "$spinstr"
+		local spinstr=$temp${spinstr%"$temp"}
+		sleep $delay
+		printf "\b\b\b\b\b\b"
+	done
+	printf "    \b\b\b\b"
+}
+
 function convert_rootfs() {
 	dd if=/dev/zero of=rootfs.img seek=500K bs=4096 count=0
 	sudo mkfs.ext4 -F rootfs.img
@@ -28,6 +42,11 @@ function unmount() {
 	sudo umount rootfs
 }
 
+function fsck() {
+	sudo e2fsck rootfs.img
+	sudo e2fsck system.img
+}
+
 function flash() {
 	adb push system.img /data/system.img
 	adb push rootfs.img /data/rootfs.img
@@ -44,38 +63,27 @@ function clean() {
 export ROOTFS_TAR=$1
 export AND_IMAGE=$2
 
-echo Chosen rootfs is $ROOTFS_TAR
-echo Chosen android image is $AND_IMAGE
-
-echo "Writing rootfs into mountable image"
+echo "Debug: Chosen rootfs is $ROOTFS_TAR"
+echo "Debug: Chosen android image is $AND_IMAGE"
 echo
-echo "************************************"
-convert_rootfs
-echo "************************************"
 
-echo "Writing android image into mountable image"
-echo
-echo "************************************"
-convert_androidimage
-echo "************************************"
+echo "I: Writing rootfs into mountable image"
+convert_rootfs &> /dev/null & spinner $!
 
-echo "Setting up SSH server"
-echo
-echo "************************************"
+echo "I: Writing android image into mountable image"
+convert_androidimage &> /dev/null & spinner $!
+
+echo "I: Setting up SSH server"
 setup_ssh
-echo "************************************"
 
-echo "Unmounting images"
-echo
-echo "************************************"
-unmount
-echo "************************************"
+echo "I: Unmounting images"
+unmount &> /dev/null & spinner $!
 
-echo "Pushing rootfs and android image to /data via ADB"
-echo
-echo "************************************"
-flash
-echo "************************************"
+echo "I: Checking images for filesystem errors"
+fsck &> /dev/null & spinner $!
 
-echo "Cleaning up host"
-clean
+echo "I: Pushing rootfs and android image to /data via ADB"
+flash & spinner $!
+
+echo "I: Cleaning up host"
+clean & spinner $!
