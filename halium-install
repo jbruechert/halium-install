@@ -24,14 +24,6 @@ function setup_ssh() {
 	sudo rm rootfs/usr/bin/qemu-arm-static
 }
 
-function clean() {
-	# Delete created files from last install
-	sudo rm rootfs -rf
-	
-	sudo rm rootfs.img
-	sudo rm system.img
-}
-
 function unmount() {
 	sudo umount rootfs
 }
@@ -39,6 +31,14 @@ function unmount() {
 function flash() {
 	adb push system.img /data/system.img
 	adb push rootfs.img /data/rootfs.img
+}
+
+function clean() {
+	# Delete created files from last install
+	sudo rm rootfs -rf
+	
+	sudo rm rootfs.img
+	sudo rm system.img
 }
 
 export ROOTFS_TAR=$1
