@@ -25,13 +25,15 @@ function setup_ssh() {
 }
 
 function clean() {
-	sudo umount rootfs
-	
 	# Delete created files from last install
 	sudo rm rootfs -rf
 	
 	sudo rm rootfs.img
 	sudo rm system.img
+}
+
+function unmount() {
+	sudo umount rootfs
 }
 
 function flash() {
@@ -61,6 +63,12 @@ echo "Setting up SSH server"
 echo
 echo "************************************"
 setup_ssh
+echo "************************************"
+
+echo "Unmounting images"
+echo
+echo "************************************"
+unmount
 echo "************************************"
 
 echo "Pushing rootfs and android image to /data via ADB"
