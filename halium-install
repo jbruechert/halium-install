@@ -13,7 +13,7 @@ function spinner() {
 		sleep $delay
 		printf "\b\b\b\b\b\b"
 	done
-	printf "    \b\b\b\b"
+	printf "\b\b\b\b"
 }
 
 function convert_rootfs() {
@@ -40,11 +40,6 @@ function setup_ssh() {
 
 function unmount() {
 	sudo umount rootfs
-}
-
-function fsck() {
-	sudo e2fsck rootfs.img
-	sudo e2fsck system.img
 }
 
 function flash() {
@@ -78,9 +73,6 @@ setup_ssh
 
 echo "I: Unmounting images"
 unmount &> /dev/null & spinner $!
-
-echo "I: Checking images for filesystem errors"
-fsck &> /dev/null & spinner $!
 
 echo "I: Pushing rootfs and android image to /data via ADB"
 flash & spinner $!
