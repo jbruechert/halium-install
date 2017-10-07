@@ -75,7 +75,7 @@ echo "I: Unmounting images"
 unmount &> /dev/null & spinner $!
 
 echo "I: Pushing rootfs and android image to /data via ADB"
-flash & spinner $!
+flash
 
 echo "I: Cleaning up host"
 clean & spinner $!
