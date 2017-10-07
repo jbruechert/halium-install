@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Plase make sure you have qemu-user-static, qemu-system-arm, sudo and simg2img installed before running this script!
+# dependencies: qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img
 
 function spinner() {
 	local pid=$1
@@ -16,6 +16,29 @@ function spinner() {
 	printf "\b\b\b\b"
 }
 
+function init_checks() {
+	DEPENDENCIES=(qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img)
+	BINARIES=(sudo simg2img qemu-arm-static mkfs.ext4 update-binfmts)
+
+	for bin in ${BINARIES[@]}; do
+		if ! which $bin > /dev/null 2>&1 ; then
+			echo "$bin not found in \$PATH"
+			echo
+			echo "make sure you have all dependencies installed."
+			echo "dependencies: ${DEPENDENCIES[*]}"
+			return 1
+		fi
+	done
+
+	# if qemu-arm-static exists, a sanely installed update-binfmts
+	# -should- have qemu-arm. try to enable it in case it isnt.
+	if ! update-binfmts --display qemu-arm | grep -q "qemu-arm (enabled)" ; then
+		sudo update-binfmts --enable qemu-arm
+	fi
+
+	return 0
+}
+
 function convert_rootfs() {
 	dd if=/dev/zero of=rootfs.img seek=500K bs=4096 count=0
 	sudo mkfs.ext4 -F rootfs.img
@@ -26,15 +49,56 @@ function convert_rootfs() {
 
 function convert_androidimage() {
 	simg2img $AND_IMAGE system.img
-	sudo resize2fs -M system.img
 }
 
-function setup_ssh() {
+function shrink_images() {
+	e2fsck -fy system.img > /dev/null
+	sudo resize2fs -p -M system.img
+
+	e2fsck -fy rootfs.img > /dev/null
+	sudo resize2fs -p -M rootfs.img
+}
+
+function expand_rootfs() {
+	if ! adb shell resize2fs /data/rootfs.img 2048M ;  then
+		cat <<- EOF
+E: adb reports that resize2fs failed. please run the following command from a root adb shell.
+
+--------------------------------------------------------------------------------
+    resize2fs /data/rootfs.img 2048M
+--------------------------------------------------------------------------------
+EOF
+	fi
+}
+
+function setup_passwd() {
 	sudo cp $(which qemu-arm-static) rootfs/usr/bin
 	
 	sudo chroot rootfs passwd root
-	sudo LANG=C chroot rootfs dpkg-reconfigure dropbear-run
 	
+	sudo rm rootfs/usr/bin/qemu-arm-static
+}
+
+function post_install() {
+	if [ "$1" == "none" ]; then
+		return
+	fi
+
+	sudo cp $(which qemu-arm-static) rootfs/usr/bin
+	case "$1" in
+	halium)
+		sudo rm -f rootfs/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
+		sudo LANG=C RUNLEVEL=1 chroot rootfs /bin/bash -c "source /etc/environment; dpkg-reconfigure dropbear-run"
+		;;
+	pm)
+		sudo chroot rootfs passwd phablet
+
+		# cant source /etc/environment
+		# LD_LIBRARY_ ; QML2_IMPORT_ derps
+		# set static path for now
+		sudo LANG=C RUNLEVEL=1 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games" chroot rootfs /bin/bash -c "dpkg-reconfigure openssh-server"
+		;;
+	esac
 	sudo rm rootfs/usr/bin/qemu-arm-static
 }
 
@@ -55,11 +119,55 @@ function clean() {
 	sudo rm system.img
 }
 
+function usage() {
+	cat <<- EOF
+	usage: $0 rootfs.tar[.gz] system.img [release]
+
+	positional arguments:
+	    rootfs.tar[.gz]
+	    system.img
+
+	optional arguments:
+	    release: run common post installation tasks for release.
+	             supported: none, halium, pm
+	             defaults : none
+	EOF
+}
+
+if ! init_checks ; then
+	exit
+fi
+
+if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
+	usage
+	exit
+fi
+
+if [ ! -f $1 ] || [ ! -f $2 ] ; then
+	usage
+	exit
+fi
+
+if [ "$#" -eq 3 ]; then
+	case "$3" in
+	halium|pm)
+		export ROOTFS_RELEASE="$3"
+		;;
+	*)
+		echo "release [$3] not supported."
+		exit
+		;;
+	esac
+else
+	ROOTFS_RELEASE="none"
+fi
+
 export ROOTFS_TAR=$1
 export AND_IMAGE=$2
 
 echo "Debug: Chosen rootfs is $ROOTFS_TAR"
 echo "Debug: Chosen android image is $AND_IMAGE"
+echo "Debug: Chosen release is $ROOTFS_RELEASE"
 echo
 
 echo "I: Writing rootfs into mountable image"
@@ -68,14 +176,23 @@ convert_rootfs &> /dev/null & spinner $!
 echo "I: Writing android image into mountable image"
 convert_androidimage &> /dev/null & spinner $!
 
-echo "I: Setting up SSH server"
-setup_ssh
+echo "I: Setting up passwd for root user"
+setup_passwd
+
+echo "I: Running post installation tasks"
+post_install $ROOTFS_RELEASE
 
 echo "I: Unmounting images"
 unmount &> /dev/null & spinner $!
 
+echo "I: Shrinking images"
+shrink_images
+
 echo "I: Pushing rootfs and android image to /data via ADB"
 flash
+
+echo "I: Expanding rootfs.img on device"
+expand_rootfs
 
 echo "I: Cleaning up host"
 clean & spinner $!
