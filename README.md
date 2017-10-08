@@ -11,5 +11,5 @@ The difference to the official script from the halium-scripts repository is that
 
 ### Usage:
 ```
-./halium-install <rootfs.tar.gz> <system.img>
+./halium-install <rootfs.tar.gz> <system.img> <mode (halium, pm, none)>
 ```
