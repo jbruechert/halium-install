@@ -54,21 +54,6 @@ function convert_androidimage() {
 function shrink_images() {
 	e2fsck -fy system.img > /dev/null
 	sudo resize2fs -p -M system.img
-
-	e2fsck -fy rootfs.img > /dev/null
-	sudo resize2fs -p -M rootfs.img
-}
-
-function expand_rootfs() {
-	if ! adb shell resize2fs /data/rootfs.img 2048M ;  then
-		cat <<- EOF
-E: adb reports that resize2fs failed. please run the following command from a root adb shell.
-
---------------------------------------------------------------------------------
-    resize2fs /data/rootfs.img 2048M
---------------------------------------------------------------------------------
-EOF
-	fi
 }
 
 function setup_passwd() {
@@ -190,9 +175,6 @@ shrink_images
 
 echo "I: Pushing rootfs and android image to /data via ADB"
 flash
-
-echo "I: Expanding rootfs.img on device"
-expand_rootfs
 
 echo "I: Cleaning up host"
 clean & spinner $!
