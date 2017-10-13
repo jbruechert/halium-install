@@ -21,7 +21,7 @@ function init_checks() {
 	BINARIES=(sudo simg2img qemu-arm-static mkfs.ext4 update-binfmts)
 
 	for bin in ${BINARIES[@]}; do
-		if ! which $bin > /dev/null 2>&1 ; then
+		if ! sudo bash -c "command -v $bin" > /dev/null 2>&1 ; then
 			echo "$bin not found in \$PATH"
 			echo
 			echo "make sure you have all dependencies installed."
@@ -32,7 +32,7 @@ function init_checks() {
 
 	# if qemu-arm-static exists, a sanely installed update-binfmts
 	# -should- have qemu-arm. try to enable it in case it isnt.
-	if ! update-binfmts --display qemu-arm | grep -q "qemu-arm (enabled)" ; then
+	if ! sudo update-binfmts --display qemu-arm | grep -q "qemu-arm (enabled)" ; then
 		sudo update-binfmts --enable qemu-arm
 	fi
 
@@ -52,7 +52,7 @@ function convert_androidimage() {
 }
 
 function shrink_images() {
-	e2fsck -fy system.img > /dev/null
+	sudo e2fsck -fy system.img > /dev/null
 	sudo resize2fs -p -M system.img
 }
 
