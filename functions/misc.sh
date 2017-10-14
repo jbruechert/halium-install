@@ -1,3 +1,10 @@
+#!/bin/bash
+#
+# Copyright (C) 2017 JBBgameich
+# Copyright (C) 2017 TheWiseNerd
+#
+# License: GPLv3
+
 function spinner() {
 	local pid=$1
 	local delay=0.75
@@ -33,7 +40,7 @@ function init_checks() {
 	fi
 
 	return 0
-} 
+}
 
 function usage() {
 	cat <<- EOF

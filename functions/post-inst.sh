@@ -1,8 +1,15 @@
+#!/bin/bash
+#
+# Copyright (C) 2017 JBBgameich
+# Copyright (C) 2017 TheWiseNerd
+#
+# License: GPLv3
+
 function setup_passwd() {
 	sudo cp $(which qemu-arm-static) rootfs/usr/bin
-	
+
 	sudo chroot rootfs passwd root
-	
+
 	sudo rm rootfs/usr/bin/qemu-arm-static
 }
 
@@ -27,4 +34,4 @@ function post_install() {
 		;;
 	esac
 	sudo rm rootfs/usr/bin/qemu-arm-static
-} 
+}
