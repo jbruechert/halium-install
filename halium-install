@@ -1,15 +1,26 @@
 #!/bin/bash
-
+#
+# Halium installer script
+# =======================
+#
+# Copyright (C) 2017 JBBgameich
+# Copyright (C) 2017 TheWiseNerd
+#
+# License: GPLv3
+#
 # dependencies: qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img
 
+# Include functions
 . ./functions/misc.sh
 . ./functions/post-inst.sh
 . ./functions/core.sh
 
+# Check for missing dependencies
 if ! init_checks ; then
 	exit
 fi
 
+# Opts parser, to be rewritten
 if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
 	usage
 	exit
@@ -37,6 +48,7 @@ fi
 export ROOTFS_TAR=$1
 export AND_IMAGE=$2
 
+# Start installer
 echo "Debug: Chosen rootfs is $ROOTFS_TAR"
 echo "Debug: Chosen android image is $AND_IMAGE"
 echo "Debug: Chosen release is $ROOTFS_RELEASE"

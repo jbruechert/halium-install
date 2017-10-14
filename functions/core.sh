@@ -1,3 +1,10 @@
+#!/bin/bash
+#
+# Copyright (C) 2017 JBBgameich
+# Copyright (C) 2017 TheWiseNerd
+#
+# License: GPLv3
+
 function convert_rootfs() {
 	dd if=/dev/zero of=rootfs.img seek=500K bs=4096 count=0
 	sudo mkfs.ext4 -F rootfs.img
@@ -27,7 +34,7 @@ function flash() {
 function clean() {
 	# Delete created files from last install
 	sudo rm rootfs -rf
-	
+
 	sudo rm rootfs.img
 	sudo rm system.img
-} 
+}
