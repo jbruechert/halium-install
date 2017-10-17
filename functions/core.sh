@@ -6,7 +6,7 @@
 # License: GPLv3
 
 function convert_rootfs() {
-	dd if=/dev/zero of=rootfs.img seek=500K bs=4096 count=0
+	qemu-img create -f raw rootfs.img 2G
 	sudo mkfs.ext4 -F rootfs.img
 	mkdir rootfs
 	sudo mount rootfs.img rootfs
