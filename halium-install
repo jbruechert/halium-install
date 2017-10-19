@@ -64,7 +64,7 @@ echo "I: Setting up passwd for root user"
 setup_passwd
 
 echo "I: Running post installation tasks"
-post_install $ROOTFS_RELEASE
+post_install
 
 echo "I: Unmounting images"
 unmount &> /dev/null & spinner $!
