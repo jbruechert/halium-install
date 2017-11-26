@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 export RNDIS_DEVICE=$(sudo dmesg | grep rndis | grep -oh "\w*enp0\w*" | tail -n 1)
 echo "* The device seems to be connected as $RNDIS_DEVICE"
