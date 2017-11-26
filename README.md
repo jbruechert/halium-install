@@ -1,5 +1,7 @@
 ## Alternative Halium installer script
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0c6adc1dd44644b6b688f8fb048434d6)](https://www.codacy.com/app/JBBgameich/halium-install?utm_source=github.com&utm_medium=referral&utm_content=JBBgameich/halium-install&utm_campaign=badger)
+
 The difference to the official script from the halium-scripts repository is that this script will prepare the rootfs on your host system instead of on the device. This will make you independent of problems like old TWRP images, no busybox or not-working busyboxes on some devices.
 
 ### Dependencies
