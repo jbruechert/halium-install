@@ -15,3 +15,6 @@ The difference to the official script from the halium-scripts repository is that
 ```
 ./halium-install <rootfs.tar.gz> <system.img> <mode (halium, pm, none)>
 ```
+
+### Compiling
+If you want to use this shell script independently of this folder, create a standalone binary of it by executing make. You will find the executable in bin/halium-install.

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=halium-install
+Exec=halium-install
+Comment=Install a Halium rootfs on your device
+Icon=halium-install
+Categories=Development;
+Terminal=true
