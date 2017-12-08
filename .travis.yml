@@ -1,0 +1,12 @@
+sudo: required
+addons:
+  apt:
+    sources:
+    - ubuntu-xenial
+    - sourceline: 'ppa:neurobin/ppa'
+    packages:
+    - build-essential
+    - shc
+script:
+    make
+    make appimage
