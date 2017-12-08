@@ -27,7 +27,7 @@ if ! [ -d cache ]; then
 fi
 
 cd cache
-apt download bash qemu-utils qemu-user-static qemu-system-arm android-tools-fsutils adb sudo e2fsprogs binfmt-support
+apt download bash qemu-utils qemu-user-static qemu-system-arm android-tools-fsutils adb sudo e2fsprogs binfmt-support android-libadb
 
 for deb in *.deb;
     do dpkg-deb -x $deb ../bin/AppDir
