@@ -15,7 +15,11 @@ cp bin/halium-install bin/AppDir/usr/bin/halium-install
 cp halium-install.desktop bin/AppDir
 cp halium-install.desktop bin/AppDir/usr/share/applications/
 
-wget -O bin/AppDir/usr/share/icons/hicolor/scalable/apps/halium-install.svg https://raw.githubusercontent.com/JBBgameich/halium-artwork/master/logo.svg
+wget -O bin/AppDir/halium-install.svg https://raw.githubusercontent.com/JBBgameich/halium-artwork/master/logo.svg
+
+# AppRun
+wget -O bin/AppDir/AppRun https://github.com/AppImage/AppImageKit/releases/download/continuous/AppRun-x86_64
+chmod +x bin/AppDir/AppRun
 
 # Download dependencies
 if ! [ -d cache ]; then

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if ! [ -d bin ]; then mkdir bin; fi
 cp halium-install bin/halium-install-standalone.sh
 
