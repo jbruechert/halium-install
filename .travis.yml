@@ -7,6 +7,16 @@ addons:
     packages:
     - build-essential
     - shc
+
 script:
     - bash utils/standalone.sh
     - bash utils/appimage.sh
+
+after_success:
+  - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - bash upload.sh halium-install-x86_64.AppImage halium-install-standalone.sh
+
+branches:
+  except:
+    - # Do not build tags that we create when we upload to GitHub Releases
+    - /^(?i:continuous)$/
