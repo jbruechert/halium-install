@@ -28,7 +28,7 @@ appimage:
 
 	# Download dependencies
 	if ! [ -d cache ]; then mkdir -p cache; fi
-	cd cache; apt download bash qemu-utils qemu-user-static qemu-system-arm simg2img adb sudo e2fsprogs
+	cd cache; apt download bash qemu-utils qemu-user-static qemu-system-arm android-tools-fsutils adb sudo e2fsprogs
 	cd cache; for deb in *.deb; do dpkg-deb -x $$deb ../bin/AppDir; done
 	cd bin; ./../appimagetool-x86_64.AppImage AppDir
 
