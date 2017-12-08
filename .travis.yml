@@ -3,9 +3,6 @@ addons:
   apt:
     sources:
     - sourceline: 'deb http://archive.ubuntu.com/ubuntu xenial main restricted multiverse universe'
-    - sourceline: 'ppa:neurobin/ppa'
-    packages:
-    - shc
 
 script:
     - bash utils/standalone.sh

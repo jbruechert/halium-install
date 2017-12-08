@@ -11,7 +11,7 @@ if ! [ -d bin/AppDir ]; then
     mkdir -p bin/AppDir/usr/bin/ bin/AppDir/usr/share/applications/ bin/AppDir/usr/share/icons/hicolor/scalable/apps
 fi
 
-cp bin/halium-install bin/AppDir/usr/bin/halium-install
+cp bin/halium-install-standalone.sh bin/AppDir/usr/bin/halium-install
 cp halium-install.desktop bin/AppDir
 cp halium-install.desktop bin/AppDir/usr/share/applications/
 
@@ -34,6 +34,4 @@ for deb in *.deb;
 done
 
 cd ../bin
-./../appimagetool-x86_64.AppImage AppDir
-
-echo "Travis ci thinks its $(date)"
+./../appimagetool-x86_64.AppImage --exclude-file ../utils/appimage-exclude.txt AppDir

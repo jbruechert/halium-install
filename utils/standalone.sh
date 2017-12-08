@@ -11,7 +11,3 @@ sed -i '/.*core.sh/ r functions/core.sh' bin/halium-install-standalone.sh
 sed -i 's/.*misc.sh//g' bin/halium-install-standalone.sh
 sed -i 's/.*post-inst.sh//g' bin/halium-install-standalone.sh
 sed -i 's/.*core.sh//g' bin/halium-install-standalone.sh
-
-# Compile
-shc -f bin/halium-install-standalone.sh -o bin/halium-install
-rm bin/halium-install-standalone.sh.x.c
