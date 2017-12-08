@@ -2,13 +2,11 @@ sudo: required
 addons:
   apt:
     sources:
-    - ubuntu-xenial
+    - sourceline: 'deb http://archive.ubuntu.com/ubuntu xenial main restricted multiverse universe'
     - sourceline: 'ppa:neurobin/ppa'
     packages:
     - build-essential
     - shc
-before_script:
-    - sudo apt-get update
 script:
     - make
     - make appimage
