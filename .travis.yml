@@ -4,6 +4,9 @@ addons:
     sources:
     - sourceline: 'deb http://archive.ubuntu.com/ubuntu xenial main restricted multiverse universe'
 
+before_script:
+    - apt update
+
 script:
     - bash utils/standalone.sh
     - bash utils/appimage.sh
