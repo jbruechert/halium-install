@@ -5,7 +5,6 @@ addons:
     - sourceline: 'deb http://archive.ubuntu.com/ubuntu xenial main restricted multiverse universe'
     - sourceline: 'ppa:neurobin/ppa'
     packages:
-    - build-essential
     - shc
 
 script:
