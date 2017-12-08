@@ -35,3 +35,5 @@ done
 
 cd ../bin
 ./../appimagetool-x86_64.AppImage AppDir
+
+echo "Travis ci thinks its $(date)"
