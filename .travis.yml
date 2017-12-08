@@ -7,6 +7,8 @@ addons:
     packages:
     - build-essential
     - shc
+before_script:
+    - apt-get update
 script:
     - make
     - make appimage
