@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Download appimagetool
 if ! [ -f appimagetool-x86_64.AppImage ]; then
     wget "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
@@ -21,7 +23,7 @@ if ! [ -d cache ]; then
 fi
 
 cd cache
-apt download bash qemu-utils qemu-user-static qemu-system-arm android-tools-fsutils adb sudo e2fsprogs
+apt download bash qemu-utils qemu-user-static qemu-system-arm android-tools-fsutils adb sudo e2fsprogs binfmt-support
 
 for deb in *.deb;
     do dpkg-deb -x $deb ../bin/AppDir
