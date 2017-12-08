@@ -8,5 +8,5 @@ addons:
     - build-essential
     - shc
 script:
-    - make
-    - make appimage
+    - bash utils/standalone.sh
+    - bash utils/appimage.sh
