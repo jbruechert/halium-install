@@ -14,7 +14,7 @@ before_script:
 script:
     - bash utils/standalone.sh
     - bash utils/appimage.sh
-    - dpkg-buildpackage -uc -ui -us
+    - dpkg-buildpackage -uc -us
 
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
