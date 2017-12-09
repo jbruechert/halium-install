@@ -12,9 +12,9 @@ before_script:
     - sudo apt update
 
 script:
+    - dpkg-buildpackage -uc -us
     - bash utils/standalone.sh
     - bash utils/appimage.sh
-    - dpkg-buildpackage -uc -us
 
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
