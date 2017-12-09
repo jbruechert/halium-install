@@ -1,0 +1,5 @@
+halium-install (0.1) unstable; urgency=medium
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- JBBgameich <jbb.mail@gmx.de>  Sat, 09 Dec 2017 00:11:10 +0100

@@ -1,0 +1,19 @@
+Source: halium-install
+Section: devel
+Priority: optional
+Maintainer: JBBgameich <jbb.mail@gmx.de
+Build-Depends: debhelper (>= 9)
+Standards-Version: 4.1.1
+Homepage: https://github.com/JBBgameich/halium-install
+
+Package: halium-install
+Architecture: all
+Depends: qemu-utils,
+         qemu-user-static,
+         qemu-system-arm,
+         simg2img,
+         adb,
+         sudo,
+         e2fsprogs,
+         binfmt-support
+Description: Scripts to install a Halium rootfs on your android device
