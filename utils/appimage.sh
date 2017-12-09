@@ -12,14 +12,13 @@ if ! [ -d bin/AppDir ]; then
 fi
 
 cp bin/halium-install-standalone.sh bin/AppDir/usr/bin/halium-install
-cp halium-install.desktop bin/AppDir
-cp halium-install.desktop bin/AppDir/usr/share/applications/
+cp utils/halium-install.desktop bin/AppDir
+cp utils/halium-install.desktop bin/AppDir/usr/share/applications/
 
 wget -O bin/AppDir/halium-install.svg https://raw.githubusercontent.com/JBBgameich/halium-artwork/master/logo.svg
 
 # AppRun
-wget -O bin/AppDir/AppRun https://github.com/AppImage/AppImageKit/releases/download/continuous/AppRun-x86_64
-chmod +x bin/AppDir/AppRun
+ln bin/AppDir/usr/bin/halium-install bin/AppDir/AppRun
 
 # Download dependencies
 if ! [ -d cache ]; then

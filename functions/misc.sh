@@ -23,11 +23,6 @@ function init_checks() {
 	DEPENDENCIES=(qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img)
 	BINARIES=(sudo simg2img qemu-arm-static mkfs.ext4 update-binfmts qemu-img)
 
-	if [ -f ../AppRun ] && ! [ $(whoami) == "root" ]; then
-		echo "The AppImage can only be run as root, because we can't use sudo inside otherwise!"
-		exit 1
-	fi
-
 	for bin in ${BINARIES[@]}; do
 		if ! sudo bash -c "command -v $bin" > /dev/null 2>&1 ; then
 			echo "$bin not found in \$PATH"
