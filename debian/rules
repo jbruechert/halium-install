@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	bash utils/standalone.sh
+
+override_dh_auto_install:
+	mkdir -p debian/tmp
+	cp bin/halium-install-standalone.sh debian/tmp/halium-install
+	cp connect-ssh.sh debian/tmp/halium-connect-ssh
+	cp connect-telnet.sh debian/tmp/halium-connect-telnet
+
+override_dh_install:
+	dh_install --sourcedir debian/tmp
+
+clean:
+	if [ -e bin ]; then rm bin -r; fi
