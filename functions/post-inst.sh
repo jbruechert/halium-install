@@ -23,6 +23,8 @@ function post_install() {
 	halium)
 		sudo rm -f rootfs/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
 		sudo LANG=C RUNLEVEL=1 chroot rootfs /bin/bash -c "source /etc/environment; dpkg-reconfigure dropbear-run"
+
+		sudo tee -a rootfs/etc/dropbear/authorized_keys < ~/.ssh/id_rsa.pub
 		;;
 	pm)
 		sudo chroot rootfs passwd phablet
