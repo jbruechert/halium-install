@@ -5,6 +5,7 @@ addons:
     - sourceline: 'deb http://archive.ubuntu.com/ubuntu xenial main restricted multiverse universe'
     packages:
     - devscripts
+    - fakeroot
     - debhelper
 
 before_script:
