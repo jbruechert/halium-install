@@ -18,7 +18,7 @@ function convert_androidimage() {
 }
 
 function shrink_images() {
-	sudo e2fsck -fy system.img > /dev/null
+	sudo e2fsck -fy system.img >/dev/null
 	sudo resize2fs -p -M system.img
 }
 

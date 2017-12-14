@@ -24,7 +24,7 @@ function init_checks() {
 	BINARIES=(sudo simg2img qemu-arm-static mkfs.ext4 update-binfmts qemu-img)
 
 	for bin in ${BINARIES[@]}; do
-		if ! sudo bash -c "command -v $bin" > /dev/null 2>&1 ; then
+		if ! sudo bash -c "command -v $bin" >/dev/null 2>&1; then
 			echo "$bin not found in \$PATH"
 			echo
 			echo "make sure you have all dependencies installed."
@@ -35,7 +35,7 @@ function init_checks() {
 
 	# if qemu-arm-static exists, a sanely installed update-binfmts
 	# -should- have qemu-arm. try to enable it in case it isnt.
-	if ! sudo update-binfmts --display qemu-arm | grep -q "qemu-arm (enabled)" ; then
+	if ! sudo update-binfmts --display qemu-arm | grep -q "qemu-arm (enabled)"; then
 		sudo update-binfmts --enable qemu-arm
 	fi
 
@@ -43,7 +43,7 @@ function init_checks() {
 }
 
 function usage() {
-	cat <<- EOF
+	cat <<-EOF
 	usage: $0 rootfs.tar[.gz] system.img [release]
 
 	positional arguments:

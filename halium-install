@@ -16,7 +16,7 @@
 . ./functions/core.sh
 
 # Check for missing dependencies
-if ! init_checks ; then
+if ! init_checks; then
 	exit
 fi
 
@@ -26,14 +26,14 @@ if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
 	exit
 fi
 
-if [ ! -f $1 ] || [ ! -f $2 ] ; then
+if [ ! -f $1 ] || [ ! -f $2 ]; then
 	usage
 	exit
 fi
 
 if [ "$#" -eq 3 ]; then
 	case "$3" in
-	halium|pm)
+	halium | pm)
 		export ROOTFS_RELEASE="$3"
 		;;
 	*)
@@ -55,10 +55,12 @@ echo "Debug: Chosen release is $ROOTFS_RELEASE"
 echo
 
 echo "I: Writing rootfs into mountable image"
-convert_rootfs &> /dev/null & spinner $!
+convert_rootfs &>/dev/null &
+spinner $!
 
 echo "I: Writing android image into mountable image"
-convert_androidimage &> /dev/null & spinner $!
+convert_androidimage &>/dev/null &
+spinner $!
 
 echo "I: Setting up passwd for root user"
 setup_passwd
@@ -67,7 +69,8 @@ echo "I: Running post installation tasks"
 post_install $ROOTFS_RELEASE
 
 echo "I: Unmounting images"
-unmount &> /dev/null & spinner $!
+unmount &>/dev/null &
+spinner $!
 
 echo "I: Shrinking images"
 shrink_images
@@ -76,4 +79,5 @@ echo "I: Pushing rootfs and android image to /data via ADB"
 flash
 
 echo "I: Cleaning up host"
-clean & spinner $!
+clean &
+spinner $!
