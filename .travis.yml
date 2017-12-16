@@ -21,6 +21,5 @@ after_success:
   - bash upload.sh bin/halium-install-x86_64.AppImage bin/halium-install-standalone.sh ../halium-install_*_all.deb
 
 branches:
-  except:
-    - # Do not build tags that we create when we upload to GitHub Releases
-    - /^(?i:continuous)$/
+  only:
+    - master
