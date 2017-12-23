@@ -15,9 +15,14 @@ A prebuilt standalone version and AppImage is available [here](https://github.co
 * simg2img
 
 ### Usage:
-```
-./halium-install <rootfs.tar.gz> <system.img> <mode (halium, pm, none)>
-```
+Download TWRP:
+`python3 download-twrp.py $DEVICE`
+
+Install a halium rootfs and systemimage:
+`./halium-install <rootfs.tar.gz> <system.img> <mode (halium, pm, none)>`
+
+Connect to the device:
+`bash connect-ssh.sh`
 
 ### Standalone version
 If you want to use this shell script independently of this folder, create a standalone script of it by executing `bash utils/standalone.sh`. You will find the executable in bin/halium-install-standalone.sh.
