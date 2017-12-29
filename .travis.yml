@@ -18,7 +18,3 @@ script:
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
   - bash upload.sh bin/halium-install-x86_64.AppImage bin/halium-install-standalone.sh ../halium-install_*_all.deb
-
-branches:
-  only:
-    - master
