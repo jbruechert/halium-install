@@ -22,7 +22,7 @@ case ${args[0]} in
     $DATA_PATH/connect-ssh.sh
     ;;
     telnet)
-    $DATA_PATH/connect.telnet.sh
+    $DATA_PATH/connect-telnet.sh
     ;;
     *)
     echo "Supported subcommands are: install, twrp, ssh, telnet"
