@@ -13,7 +13,6 @@ before_script:
 
 script:
     - dpkg-buildpackage -uc -us
-    - bash utils/standalone.sh
     - bash utils/appimage.sh
 
 after_success:

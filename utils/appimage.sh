@@ -1,24 +1,34 @@
 #!/bin/bash
 
+# Generate standalone file
+bash utils/standalone.sh
+
 # Download appimagetool
 if ! [ -f appimagetool-x86_64.AppImage ]; then
     wget "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
     chmod a+x appimagetool-x86_64.AppImage
 fi
 
-# Move binary into target
+# Create AppImage folder structure
 if ! [ -d bin/AppDir ]; then
     mkdir -p bin/AppDir/usr/bin/ bin/AppDir/usr/share/applications/ bin/AppDir/usr/share/icons/hicolor/scalable/apps
 fi
 
+# Copy scripts
 cp bin/halium-install-standalone.sh bin/AppDir/usr/bin/halium-install
-cp utils/halium-install.desktop bin/AppDir
-cp utils/halium-install.desktop bin/AppDir/usr/share/applications/
+cp connect-ssh.sh bin/AppDir/usr/bin/connect-ssh.sh
+cp connect-telnet.sh bin/AppDir/usr/bin/connect-telnet.sh
+cp download-twrp.py bin/AppDir/usr/bin/download-twrp.py
 
-wget -O bin/AppDir/halium-install.svg https://raw.githubusercontent.com/JBBgameich/halium-artwork/master/logo.svg
+# Copy desktop file
+cp utils/halium-install.desktop bin/AppDir/usr/share/applications/
+ln bin/AppDir/usr/share/applications/halium-install.desktop bin/AppDir/halium-install.desktop
+
+# Copy icon
+wget --quiet -O bin/AppDir/halium-install.svg https://raw.githubusercontent.com/JBBgameich/halium-artwork/master/logo.svg
 
 # AppRun
-ln bin/AppDir/usr/bin/halium-install bin/AppDir/AppRun
+cp launcher.sh bin/AppDir/AppRun
 
 # Download dependencies
 if ! [ -d cache ]; then

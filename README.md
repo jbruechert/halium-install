@@ -15,14 +15,17 @@ A prebuilt standalone version and AppImage is available [here](https://github.co
 * simg2img
 
 ### Usage:
+
+If you installed from a package, you will have the halium-tool command. The source file for it is called launcher.sh. If you don't want to install this, swap out halium-tool with launcher.sh in the following commands.
+
 Download TWRP:
-`python3 download-twrp.py $DEVICE`
+`halium-tool twrp $device`
 
 Install a halium rootfs and systemimage:
-`./halium-install <rootfs.tar.gz> <system.img> <mode (halium, pm, none)>`
+`halium-tool install <rootfs.tar.gz> <system.img> <mode (halium, pm, none)>`
 
 Connect to the device:
-`bash connect-ssh.sh`
+`halium-tool ssh`
 
 ### Standalone version
 If you want to use this shell script independently of this folder, create a standalone script of it by executing `bash utils/standalone.sh`. You will find the executable in bin/halium-install-standalone.sh.
