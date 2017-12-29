@@ -21,11 +21,11 @@ cp connect-telnet.sh bin/AppDir/usr/bin/connect-telnet.sh
 cp download-twrp.py bin/AppDir/usr/bin/download-twrp.py
 
 # Copy desktop file
-cp utils/halium-install.desktop bin/AppDir/usr/share/applications/
-ln bin/AppDir/usr/share/applications/halium-install.desktop bin/AppDir/halium-install.desktop
+cp utils/halium-tool.desktop bin/AppDir/usr/share/applications/
+ln bin/AppDir/usr/share/applications/halium-tool.desktop bin/AppDir/halium-tool.desktop
 
 # Copy icon
-wget --quiet -O bin/AppDir/halium-install.svg https://raw.githubusercontent.com/JBBgameich/halium-artwork/master/logo.svg
+wget --quiet -O bin/AppDir/halium.svg https://raw.githubusercontent.com/JBBgameich/halium-artwork/master/logo.svg
 
 # AppRun
 cp launcher.sh bin/AppDir/AppRun
