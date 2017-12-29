@@ -17,4 +17,15 @@ dlurl = "https://eu.dl.twrp.me" + dllinks[0]["href"].replace(".html", "")
 
 imgname = dlurl.split("/")[-1]
 
-subprocess.call(["curl", "--referer", dlurl + ".html", dlurl, "-o", imgname])
+print("I: Downloading " + dlurl)
+subprocess.call(["curl", "--progress-bar", "--referer", dlurl + ".html", dlurl, "-o", imgname])
+
+print("I: verifying checksum ...")
+validmd5sum = requests.get(dlurl + ".md5").content.decode()
+localmd5sum = subprocess.check_output(["md5sum", imgname]).decode().rstrip()
+
+if localmd5sum == validmd5sum:
+    print("I: Checksum matches")
+else:
+    print("I: Download failed, file is corrupted")
+    sys.exit(1)
