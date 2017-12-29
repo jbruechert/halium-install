@@ -14,5 +14,8 @@ install:
 	cp connect-telnet.sh $(TARGET)/share/halium-scripts/connect-telnet.sh
 	cp download-twrp.py $(TARGET)/share/halium-scripts/download-twrp.py
 
+appimage:
+	bash utils/appimage.sh
+
 clean:
 	if [ -d bin ];then rm bin -r; fi

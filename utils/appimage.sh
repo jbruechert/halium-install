@@ -5,10 +5,12 @@ bash utils/standalone.sh
 
 # Download appimagetool
 if ! [ -f appimagetool-x86_64.AppImage ]; then
-    wget "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+    echo "I: Downloading appimagetool-x86_64.AppImage ..."
+    wget --quiet "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
     chmod a+x appimagetool-x86_64.AppImage
 fi
 
+echo "I: Copying scripts into AppDir ..."
 # Create AppImage folder structure
 if ! [ -d bin/AppDir ]; then
     mkdir -p bin/AppDir/usr/bin/ bin/AppDir/usr/share/applications/ bin/AppDir/usr/share/icons/hicolor/scalable/apps
@@ -36,11 +38,14 @@ if ! [ -d cache ]; then
 fi
 
 cd cache
-apt download bash qemu-utils python3 python-beautifulsoup curl qemu-user-static qemu-system-arm android-tools-fsutils adb sudo e2fsprogs binfmt-support android-libadb
+echo "I: Downloading dependencies ..."
+apt -q=2 download bash qemu-utils python3 python-beautifulsoup curl qemu-user-static qemu-system-arm android-tools-fsutils adb sudo e2fsprogs binfmt-support android-libadb
 
+echo "I: Unpacking dependencies"
 for deb in *.deb;
     do dpkg-deb -x $deb ../bin/AppDir
 done
 
+echo "I: Creating AppImage"
 cd ../bin
 ./../appimagetool-x86_64.AppImage --exclude-file ../utils/appimage-exclude.txt AppDir
