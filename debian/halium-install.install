@@ -1,3 +1,0 @@
-halium-install /usr/bin
-halium-connect-telnet /usr/bin
-halium-connect-ssh /usr/bin
