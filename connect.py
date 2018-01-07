@@ -41,13 +41,13 @@ parser.add_argument("-u", "--username", help="Username to use. Usually root or p
 
 args = parser.parse_args()
 
-if args.protocol == "ssh":
+if not args.protocol:
+    print("You need to supply a protocol to use")
+    sys.exit(1)
+elif not args.username:
+    print("You did not supply a username to use")
+    sys.exit(1)
+elif args.protocol == "ssh":
     connect_ssh(get_rndis_device())
 elif args.protocol == "telnet":
     connect_telnet(get_rndis_device())
-elif not args.protocol:
-    print("You did not supply a protocol to use, the default is ssh.")
-    connect_ssh(get_rndis_device())
-elif not args.username:
-    print("You need to supply a username")
-    sys.exit(1)
