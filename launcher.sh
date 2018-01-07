@@ -18,13 +18,11 @@ case ${args[0]} in
     twrp)
     $DATA_PATH/download-twrp.py ${args[@]:1}
     ;;
-    ssh)
-    $DATA_PATH/connect-ssh.sh
-    ;;
-    telnet)
-    $DATA_PATH/connect-telnet.sh
+    connect)
+    $DATA_PATH/connect.py ${args[@]:1}
     ;;
     *)
-    echo "Supported subcommands are: install, twrp, ssh, telnet"
+    echo "Supported subcommands are: install, twrp, connect"
+    echo "Each subcommand has it's own extra arguments and help page"
     ;;
 esac

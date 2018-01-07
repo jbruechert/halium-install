@@ -18,8 +18,7 @@ fi
 
 # Copy scripts
 cp bin/halium-install-standalone.sh bin/AppDir/usr/bin/halium-install
-cp connect-ssh.sh bin/AppDir/usr/bin/connect-ssh.sh
-cp connect-telnet.sh bin/AppDir/usr/bin/connect-telnet.sh
+cp connect.py bin/AppDir/usr/bin/connect.py
 cp download-twrp.py bin/AppDir/usr/bin/download-twrp.py
 
 # Copy desktop file
