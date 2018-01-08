@@ -32,6 +32,14 @@ function post_install() {
 		# set static path for now
 		sudo LANG=C RUNLEVEL=1 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games" chroot rootfs /bin/bash -c "dpkg-reconfigure openssh-server"
 		;;
+	ut)
+		wget --quiet -O ut-halium-compat.tar.gz https://github.com/ubports/ut-halium-compat/archive/master.tar.gz
+		mkdir ut-halium-compat
+		tar -xf ut-halium-compat.tar.gz -C ut-halium-compat
+		sudo cp ut-halium-compat/ut-halium-compat-master/root/* rootfs/ -r
+		sudo touch rootfs/.halium-ro
+		rm ut-halium-compat.tar.gz ut-halium-compat -r
+		;;
 	esac
 	sudo rm rootfs/usr/bin/qemu-arm-static
 }

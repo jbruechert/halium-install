@@ -52,7 +52,7 @@ function usage() {
 
 	optional arguments:
 	    release: run common post installation tasks for release.
-	             supported: none, halium, pm
+	             supported: none, halium, pm, ut
 	             defaults : none
 	EOF
 }
