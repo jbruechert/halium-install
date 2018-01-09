@@ -7,7 +7,7 @@
 
 function convert_rootfs() {
 	qemu-img create -f raw rootfs.img 2G
-	sudo mkfs.ext4 -F rootfs.img
+	sudo mkfs.ext4 -O ^metadata_csum -O ^64bit -F rootfs.img
 	mkdir rootfs
 	sudo mount rootfs.img rootfs
 	sudo tar -xf $ROOTFS_TAR -C rootfs
