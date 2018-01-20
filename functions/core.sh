@@ -17,6 +17,10 @@ function convert_androidimage() {
 	simg2img $AND_IMAGE system.img
 }
 
+function rootfs_sparse() {
+	img2simg rootfs.img rootfs.sparse.img
+}
+
 function shrink_images() {
 	sudo e2fsck -fy system.img >/dev/null
 	sudo resize2fs -p -M system.img
@@ -28,7 +32,13 @@ function unmount() {
 
 function flash() {
 	adb push system.img /data/system.img
-	adb push rootfs.img /data/rootfs.img
+
+	if [ -f rootfs.sparse.img ]; then
+		adb reboot bootloader
+		fastboot flash rootfs.sparse.img
+	else
+		adb push rootfs.img /data/rootfs.img
+	fi
 }
 
 function clean() {
@@ -36,5 +46,6 @@ function clean() {
 	sudo rm rootfs -rf
 
 	sudo rm rootfs.img
+	if [ -f rootfs.sparse.img ]; then rm rootfs.sparse.img; fi
 	sudo rm system.img
 }

@@ -75,6 +75,10 @@ spinner $!
 echo "I: Shrinking images"
 shrink_images
 
+echo "I: Making rootfs.img sparse for flashing"
+rootfs_sparse &>/dev/null &
+spinner $!
+
 echo "I: Pushing rootfs and android image to /data via ADB"
 flash
 
