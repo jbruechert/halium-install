@@ -54,13 +54,18 @@ echo "Debug: Chosen android image is $AND_IMAGE"
 echo "Debug: Chosen release is $ROOTFS_RELEASE"
 echo
 
-echo "I: Writing rootfs into mountable image"
-convert_rootfs &>/dev/null &
-spinner $!
+if [ -d rootfs ]; then
+	#umount rootfs
+	sudo rm rootfs -r
+fi
 
-echo "I: Writing android image into mountable image"
-convert_androidimage &>/dev/null &
-spinner $!
+start_spinner "I: Writing rootfs into mountable image"
+convert_rootfs &>/dev/null
+stop_spinner $?
+
+start_spinner "I: Writing android image into mountable image"
+convert_androidimage &>/dev/null
+stop_spinner $?
 
 echo "I: Setting up passwd for root user"
 setup_passwd
@@ -68,9 +73,9 @@ setup_passwd
 echo "I: Running post installation tasks"
 post_install $ROOTFS_RELEASE
 
-echo "I: Unmounting images"
-unmount &>/dev/null &
-spinner $!
+start_spinner "I: Unmounting images"
+unmount &>/dev/null
+stop_spinner $?
 
 echo "I: Shrinking images"
 shrink_images
@@ -78,6 +83,6 @@ shrink_images
 echo "I: Pushing rootfs and android image to /data via ADB"
 flash
 
-echo "I: Cleaning up host"
-clean &
-spinner $!
+start_spinner "I: Cleaning up host"
+clean
+stop_spinner $?
