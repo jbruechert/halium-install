@@ -33,7 +33,7 @@ fi
 
 if [ "$#" -eq 3 ]; then
 	case "$3" in
-	halium | pm)
+	halium | pm | ut)
 		export ROOTFS_RELEASE="$3"
 		;;
 	*)

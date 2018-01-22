@@ -18,8 +18,8 @@ function convert_androidimage() {
 }
 
 function shrink_images() {
-	sudo e2fsck -fy system.img >/dev/null
-	sudo resize2fs -p -M system.img
+	[ -f system.img ] && sudo e2fsck -fy system.img >/dev/null
+	[ -f system.img ] && sudo resize2fs -p -M system.img
 }
 
 function unmount() {
@@ -27,7 +27,8 @@ function unmount() {
 }
 
 function flash() {
-	adb push system.img /data/system.img
+	# system.img is pushed inside the rootfs on ubuntu touch
+	[ -f system.img ] && adb push system.img /data/system.img
 	adb push rootfs.img /data/rootfs.img
 }
 
@@ -36,5 +37,5 @@ function clean() {
 	sudo rm rootfs -rf
 
 	sudo rm rootfs.img
-	sudo rm system.img
+	[ -f system.img ] && sudo rm system.img
 }
