@@ -26,10 +26,6 @@ function unmount() {
 	sudo umount $ROOTFS_DIR
 }
 
-function adb_shell() {
-	adb shell "$@"
-}
-
 function flash() {
 	for image in rootfs.img system.img; do
 		if [ -f $image ]; then
