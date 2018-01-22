@@ -26,10 +26,20 @@ function unmount() {
 	sudo umount rootfs
 }
 
+function adb_shell() {
+	adb shell "$@"
+}
+
 function flash() {
-	# system.img is pushed inside the rootfs on ubuntu touch
-	[ -f system.img ] && adb push system.img /data/system.img
-	adb push rootfs.img /data/rootfs.img
+	echo "compressing images (zip)"
+	for image in rootfs.img system.img; do
+		if [ -f $image ]; then
+			zip $image $image
+			adb push $image.zip /data/
+			adb_shell unzip /data/$image.zip -d /data
+			adb_shell rm /data/$image.zip
+		fi
+	done
 }
 
 function clean() {
