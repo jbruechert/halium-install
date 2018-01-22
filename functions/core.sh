@@ -8,9 +8,9 @@
 function convert_rootfs() {
 	qemu-img create -f raw rootfs.img 2G
 	sudo mkfs.ext4 -O ^metadata_csum -O ^64bit -F rootfs.img
-	mkdir rootfs
-	sudo mount rootfs.img rootfs
-	sudo tar -xf $ROOTFS_TAR -C rootfs
+	mkdir $ROOTFS_DIR
+	sudo mount rootfs.img $ROOTFS_DIR
+	sudo tar -xf $ROOTFS_TAR -C $ROOTFS_DIR
 }
 
 function convert_androidimage() {
@@ -23,7 +23,7 @@ function shrink_images() {
 }
 
 function unmount() {
-	sudo umount rootfs
+	sudo umount $ROOTFS_DIR
 }
 
 function adb_shell() {
@@ -34,7 +34,7 @@ function flash() {
 	echo "compressing images (zip)"
 	for image in rootfs.img system.img; do
 		if [ -f $image ]; then
-			zip $image $image
+			zip -1 $image.zip $image
 			adb push $image.zip /data/
 			adb_shell unzip /data/$image.zip -d /data
 			adb_shell rm /data/$image.zip
@@ -44,8 +44,11 @@ function flash() {
 
 function clean() {
 	# Delete created files from last install
-	sudo rm rootfs -rf
+	sudo rm $ROOTFS_DIR -rf
 
-	sudo rm rootfs.img
-	[ -f system.img ] && sudo rm system.img
+	for file in rootfs.img system.img; do
+		if [ -f $file ]; then
+			sudo rm $file $file.zip
+		fi
+	done
 }
