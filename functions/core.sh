@@ -31,13 +31,9 @@ function adb_shell() {
 }
 
 function flash() {
-	echo "compressing images (zip)"
 	for image in rootfs.img system.img; do
 		if [ -f $image ]; then
-			zip -1 $image.zip $image
-			adb push $image.zip /data/
-			adb_shell unzip /data/$image.zip -d /data
-			adb_shell rm /data/$image.zip
+			adb push $image /data/$image
 		fi
 	done
 }
@@ -48,7 +44,7 @@ function clean() {
 
 	for file in rootfs.img system.img; do
 		if [ -f $file ]; then
-			sudo rm $file $file.zip
+			sudo rm $file
 		fi
 	done
 }
