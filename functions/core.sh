@@ -8,9 +8,9 @@
 function convert_rootfs() {
 	qemu-img create -f raw rootfs.img 2G
 	sudo mkfs.ext4 -O ^metadata_csum -O ^64bit -F rootfs.img
-	mkdir rootfs
-	sudo mount rootfs.img rootfs
-	sudo tar -xf $ROOTFS_TAR -C rootfs
+	mkdir $ROOTFS_DIR
+	sudo mount rootfs.img $ROOTFS_DIR
+	sudo tar -xf $ROOTFS_TAR -C $ROOTFS_DIR
 }
 
 function convert_androidimage() {
@@ -23,19 +23,24 @@ function shrink_images() {
 }
 
 function unmount() {
-	sudo umount rootfs
+	sudo umount $ROOTFS_DIR
 }
 
 function flash() {
-	# system.img is pushed inside the rootfs on ubuntu touch
-	[ -f system.img ] && adb push system.img /data/system.img
-	adb push rootfs.img /data/rootfs.img
+	for image in rootfs.img system.img; do
+		if [ -f $image ]; then
+			adb push $image /data/$image
+		fi
+	done
 }
 
 function clean() {
 	# Delete created files from last install
-	sudo rm rootfs -rf
+	sudo rm $ROOTFS_DIR -rf
 
-	sudo rm rootfs.img
-	[ -f system.img ] && sudo rm system.img
+	for file in rootfs.img system.img; do
+		if [ -f $file ]; then
+			sudo rm $file
+		fi
+	done
 }

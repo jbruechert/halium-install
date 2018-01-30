@@ -47,6 +47,7 @@ fi
 
 export ROOTFS_TAR=$1
 export AND_IMAGE=$2
+export ROOTFS_DIR=$(mktemp -d /tmp/halium-install.XXXXX)
 
 # Start installer
 echo "Debug: Chosen rootfs is $ROOTFS_TAR"
