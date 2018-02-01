@@ -32,6 +32,10 @@ function flash() {
 			adb push $image /data/$image
 		fi
 	done
+
+	if [ "$1" == "ut" ]; then
+		adb shell ln /data/rootfs.img /data/system.img
+	fi
 }
 
 function clean() {

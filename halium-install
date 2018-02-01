@@ -77,7 +77,7 @@ echo "I: Shrinking images"
 shrink_images
 
 echo "I: Pushing rootfs and android image to /data via ADB"
-flash
+flash $ROOTFS_RELEASE
 
 echo "I: Cleaning up host"
 clean &
