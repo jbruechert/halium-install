@@ -5,10 +5,16 @@
 #
 # License: GPLv3
 
-function setup_passwd() {
-	sudo cp $(which qemu-arm-static) $ROOTFS_DIR/usr/bin
+do_until_success() {
+	while ! "$@"; do
+		echo "Failed, trying again"
+	done
+}
 
-	sudo chroot $ROOTFS_DIR passwd root
+function setup_passwd() {
+	sudo cp $(command -v qemu-arm-static) $ROOTFS_DIR/usr/bin
+
+	do_until_success sudo chroot $ROOTFS_DIR passwd root
 
 	sudo rm $ROOTFS_DIR/usr/bin/qemu-arm-static
 }
@@ -18,19 +24,19 @@ function post_install() {
 		return
 	fi
 
-	sudo cp $(which qemu-arm-static) $ROOTFS_DIR/usr/bin
+	sudo cp $(command -v qemu-arm-static) $ROOTFS_DIR/usr/bin
 	case "$1" in
 	halium)
 		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
 		sudo LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; dpkg-reconfigure dropbear-run"
 		;;
 	pm)
-		sudo chroot $ROOTFS_DIR passwd phablet
+		do_until_success sudo chroot $ROOTFS_DIR passwd phablet
 
 		# cant source /etc/environment
 		# LD_LIBRARY_ ; QML2_IMPORT_ derps
 		# set static path for now
-		sudo LANG=C RUNLEVEL=1 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games" chroot $ROOTFS_DIR /bin/bash -c "dpkg-reconfigure openssh-server"
+		sudo LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "dpkg-reconfigure openssh-server"
 		;;
 	ut)
 		# Adapted from rootstock-ng
