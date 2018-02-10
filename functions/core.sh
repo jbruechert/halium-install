@@ -6,9 +6,7 @@
 # License: GPLv3
 
 function convert_rootfs() {
-	SIZE=$(gzsize $ROOTFS_TAR)
-	IMG_SIZE=$(( $SIZE + 100000000 ))
-	qemu-img create -f raw $IMAGE_DIR/rootfs.img $IMG_SIZE
+	qemu-img create -f raw $IMAGE_DIR/rootfs.img 2G
 	sudo mkfs.ext4 -O ^metadata_csum -O ^64bit -F $IMAGE_DIR/rootfs.img
 	sudo mount $IMAGE_DIR/rootfs.img $ROOTFS_DIR
 	sudo tar -xf $ROOTFS_TAR -C $ROOTFS_DIR
