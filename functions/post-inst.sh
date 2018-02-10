@@ -7,7 +7,7 @@
 
 do_until_success() {
 	while ! "$@"; do
-		echo "Failed, trying again"
+		echo "Failed, please try again"
 	done
 }
 
@@ -28,7 +28,7 @@ function post_install() {
 	case "$1" in
 	halium)
 		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
-		sudo LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; dpkg-reconfigure dropbear-run"
+		sudo DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; dpkg-reconfigure dropbear-run"
 		;;
 	pm)
 		do_until_success sudo chroot $ROOTFS_DIR passwd phablet
@@ -36,7 +36,7 @@ function post_install() {
 		# cant source /etc/environment
 		# LD_LIBRARY_ ; QML2_IMPORT_ derps
 		# set static path for now
-		sudo LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "dpkg-reconfigure openssh-server"
+		sudo DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "dpkg-reconfigure openssh-server"
 		;;
 	ut)
 		# Adapted from rootstock-ng
