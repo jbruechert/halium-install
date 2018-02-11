@@ -60,6 +60,13 @@ function post_install() {
 		sudo ln -s /android/system/vendor $ROOTFS_DIR/vendor
 		[ -e rootfs/etc/mtab ] && sudo rm $ROOTFS_DIR/etc/mtab
 		sudo ln -s /proc/mounts $ROOTFS_DIR/etc/mtab
+
+		# Remove or add globally after decison
+		# After the switch to halium-boot (initramfs-tools) this code is not needed for Ubuntu Touch anymore
+		echo -n "adding android system image to installation ... "
+		ANDROID_DIR="/var/lib/lxc/android/"
+		sudo mv system.img $ROOTFS_DIR/$ANDROID_DIR
+		echo "[done]"
 		;;
 	esac
 	sudo rm $ROOTFS_DIR/usr/bin/qemu-arm-static

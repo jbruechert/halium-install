@@ -30,7 +30,15 @@ function unmount() {
 }
 
 function flash() {
-	adb push $IMAGE_DIR/rootfs.img $IMAGE_DIR/system.img /data/
+	for image in rootfs.img system.img; do
+		if [ -f $IMAGE_DIR/$image ]; then
+			adb push $IMAGE_DIR/$image /data/$image
+		fi
+	done
+
+	if [ "$1" == "ut" ]; then
+		adb shell ln /data/rootfs.img /data/system.img
+	fi
 }
 
 function clean() {
