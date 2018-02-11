@@ -47,7 +47,8 @@ fi
 
 export ROOTFS_TAR=$1
 export AND_IMAGE=$2
-export ROOTFS_DIR=$(mktemp -d /tmp/halium-install.XXXXX)
+export ROOTFS_DIR=$(mktemp -d .halium-install.XXXXX)
+export IMAGE_DIR=$(mktemp -d .halium-install-imgs.XXXXX)
 
 # Start installer
 echo "Debug: Chosen rootfs is $ROOTFS_TAR"
@@ -64,7 +65,9 @@ convert_androidimage &>/dev/null &
 spinner $!
 
 echo "I: Setting up passwd for root user"
-setup_passwd
+if ! [ $ROOTFS_RELEASE == "ut" ]; then
+    setup_passwd
+fi
 
 echo "I: Running post installation tasks"
 post_install $ROOTFS_RELEASE
@@ -77,7 +80,9 @@ echo "I: Shrinking images"
 shrink_images
 
 echo "I: Pushing rootfs and android image to /data via ADB"
-flash $ROOTFS_RELEASE
+if ! flash $ROOTFS_RELEASE; then
+	echo "Error: Couldn't copy the files to the device, is it connected?"
+fi
 
 echo "I: Cleaning up host"
 clean &
