@@ -65,7 +65,7 @@ function post_install() {
 		# After the switch to halium-boot (initramfs-tools) this code is not needed for Ubuntu Touch anymore
 		echo -n "adding android system image to installation ... "
 		ANDROID_DIR="/var/lib/lxc/android/"
-		sudo mv system.img $ROOTFS_DIR/$ANDROID_DIR
+		sudo mv $IMAGE_DIR/system.img $ROOTFS_DIR/$ANDROID_DIR
 		echo "[done]"
 		;;
 	esac
