@@ -3,7 +3,9 @@
 args=($@)
 
 # Find our stuff
-if [ -f /usr/share/halium-scripts/halium-install ]; then
+if [ -f /tmp/.mount_halium*/usr/share/halium-scripts/halium-install ]; then
+    export DATA_PATH="/tmp/.mount_halium*/usr/share/halium-scripts/"
+elif [ -f /usr/share/halium-scripts/halium-install ]; then
     export DATA_PATH="/usr/share/halium-scripts/"
 elif [ -f /usr/local/share/halium-scripts/halium-install ]; then
     export DATA_PATH="/usr/local/share/halium-scripts/"

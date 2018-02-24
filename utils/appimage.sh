@@ -13,13 +13,13 @@ fi
 echo "I: Copying scripts into AppDir ..."
 # Create AppImage folder structure
 if ! [ -d bin/AppDir ]; then
-    mkdir -p bin/AppDir/usr/bin/ bin/AppDir/usr/share/applications/ bin/AppDir/usr/share/icons/hicolor/scalable/apps
+    mkdir -p bin/AppDir/usr/bin/ bin/AppDir/usr/share/applications/ bin/AppDir/usr/share/halium-scripts/ bin/AppDir/usr/share/icons/hicolor/scalable/apps
 fi
 
 # Copy scripts
-cp bin/halium-install-standalone.sh bin/AppDir/usr/bin/halium-install
-cp connect.py bin/AppDir/usr/bin/connect.py
-cp download-twrp.py bin/AppDir/usr/bin/download-twrp.py
+cp bin/halium-install-standalone.sh bin/AppDir/usr/share/halium-scripts/halium-install
+cp connect.py bin/AppDir/usr/share/halium-scripts/connect.py
+cp download-twrp.py bin/AppDir/usr/share/halium-scripts/download-twrp.py
 
 # Copy desktop file
 cp utils/halium-tool.desktop bin/AppDir/usr/share/applications/
@@ -38,7 +38,7 @@ fi
 
 cd cache
 echo "I: Downloading dependencies ..."
-apt -q=2 download bash qemu-utils python3 python-beautifulsoup curl qemu-user-static qemu-system-arm android-tools-fsutils adb sudo e2fsprogs binfmt-support android-libadb
+apt -q=2 download bash qemu-utils python3 python-beautifulsoup curl qemu-user-static android-tools-fsutils adb sudo e2fsprogs binfmt-support android-libadb
 
 echo "I: Unpacking dependencies"
 for deb in *.deb;
