@@ -2,9 +2,14 @@
 
 args=($@)
 
+# Check if we are running in an AppImage
+if readlink -f "${0}" | grep "AppRun" >/dev/null; then
+    APPIMAGE_ROOT=$(dirname "$(readlink -f "${0}")")
+fi
+
 # Find our stuff
-if [ -f /tmp/.mount_halium*/usr/share/halium-scripts/halium-install ]; then
-    export DATA_PATH="/tmp/.mount_halium*/usr/share/halium-scripts/"
+if [ -f $APPIMAGE_ROOT/usr/share/halium-scripts/halium-install ]; then
+    export DATA_PATH="$APPIMAGE_ROOT/usr/share/halium-scripts/"
 elif [ -f /usr/share/halium-scripts/halium-install ]; then
     export DATA_PATH="/usr/share/halium-scripts/"
 elif [ -f /usr/local/share/halium-scripts/halium-install ]; then
