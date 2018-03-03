@@ -10,16 +10,6 @@
 #
 # dependencies: qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img
 
-# Include functions
-. ./functions/misc.sh
-. ./functions/post-inst.sh
-. ./functions/core.sh
-
-# Check for missing dependencies
-if ! init_checks; then
-	exit
-fi
-
 # Opts parser, to be rewritten
 if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
 	usage
@@ -45,9 +35,19 @@ else
 	ROOTFS_RELEASE="none"
 fi
 
+# Include functions
+. ./functions/misc.sh
+. ./functions/distributions.sh
+. ./functions/core.sh
+
+# Check for missing dependencies
+if ! init_checks; then
+	exit
+fi
+
 export ROOTFS_TAR=$1
 export AND_IMAGE=$2
-export ROOTFS_DIR=$(mktemp -d .halium-install.XXXXX)
+export ROOTFS_DIR=$(mktemp -d .halium-install-rootfs.XXXXX)
 export IMAGE_DIR=$(mktemp -d .halium-install-imgs.XXXXX)
 
 # Start installer
@@ -57,7 +57,7 @@ echo "Debug: Chosen release is $ROOTFS_RELEASE"
 echo
 
 echo "I: Writing rootfs into mountable image"
-convert_rootfs &>/dev/null &
+convert_rootfs $IMAGE_SIZE &>/dev/null &
 spinner $!
 
 echo "I: Writing android image into mountable image"

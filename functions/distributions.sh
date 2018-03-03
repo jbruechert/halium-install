@@ -5,6 +5,21 @@
 #
 # License: GPLv3
 
+case "$ROOTFS_RELEASE" in
+halium)
+	IMAGE_SIZE=1G
+	;;
+pm)
+	IMAGE_SIZE=2G
+	;;
+ut)
+	IMAGE_SIZE=3G
+	;;
+none)
+	IMAGE_SIZE=2G
+	;;
+esac
+
 do_until_success() {
 	while ! "$@"; do
 		echo "Failed, please try again"
