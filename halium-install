@@ -64,11 +64,6 @@ echo "I: Writing android image into mountable image"
 convert_androidimage &>/dev/null &
 spinner $!
 
-echo "I: Setting up passwd for root user"
-if ! [ $ROOTFS_RELEASE == "ut" ]; then
-    setup_passwd
-fi
-
 echo "I: Running post installation tasks"
 post_install $ROOTFS_RELEASE
 

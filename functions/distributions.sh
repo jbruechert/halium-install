@@ -27,11 +27,8 @@ do_until_success() {
 }
 
 function setup_passwd() {
-	sudo cp $(command -v qemu-arm-static) $ROOTFS_DIR/usr/bin
-
-	do_until_success sudo chroot $ROOTFS_DIR passwd root
-
-	sudo rm $ROOTFS_DIR/usr/bin/qemu-arm-static
+	echo "Please enter a new password for the '$1' user:"
+	do_until_success sudo chroot $ROOTFS_DIR passwd $1
 }
 
 function post_install() {
@@ -42,11 +39,14 @@ function post_install() {
 	sudo cp $(command -v qemu-arm-static) $ROOTFS_DIR/usr/bin
 	case "$1" in
 	halium)
+		setup_passwd root
+
 		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
 		sudo DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; dpkg-reconfigure dropbear-run"
 		;;
 	pm)
-		do_until_success sudo chroot $ROOTFS_DIR passwd phablet
+		setup_passwd root
+		setup_passwd phablet
 
 		# cant source /etc/environment
 		# LD_LIBRARY_ ; QML2_IMPORT_ derps
