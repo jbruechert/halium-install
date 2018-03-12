@@ -74,9 +74,11 @@ spinner $!
 echo "I: Shrinking images"
 shrink_images
 
-echo "I: Pushing rootfs and android image to /data via ADB"
-if ! flash $ROOTFS_RELEASE; then
-	echo "Error: Couldn't copy the files to the device, is it connected?"
+echo "I: Pushing rootfs and android image to /data"
+if [ $FLASH_ADB ]; then
+	flash_error flash_adb
+else
+	flash_error flash_rsync
 fi
 
 echo "I: Cleaning up host"

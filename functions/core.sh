@@ -31,9 +31,38 @@ function unmount() {
 	sudo umount $ROOTFS_DIR
 }
 
-function flash() {
+function flash_adb() {
 	adb push $IMAGE_DIR/rootfs.img /data/
 	adb push $IMAGE_DIR/system.img /data/
+}
+
+function flash_rsync() {
+	# Download prebuilt rsync
+	echo "[install] Installing rsync on the device ..."
+	! [ -f $IMAGE_DIR/rsync.bin ] && wget -O $IMAGE_DIR/rsync.bin --continue -q "https://github.com/JBBgameich/rsync-static/releases/download/continuous/rsync-arm"
+	! [ -f $IMAGE_DIR/rsyncd.conf ] && wget -O $IMAGE_DIR/rsyncd.conf --continue -q "https://raw.githubusercontent.com/JBBgameich/rsync-static/master/rsyncd.conf"
+
+	# Push rsync
+	adb push $IMAGE_DIR/rsync.bin /data/rsync >/dev/null
+	adb push $IMAGE_DIR/rsyncd.conf /data/rsyncd.conf >/dev/null
+	adb shell chmod +x /data/rsync
+
+	# Start rsync daemon on the device
+	adb shell '/data/rsync --daemon --config=/data/rsyncd.conf &'
+	adb forward tcp:6010 tcp:1873
+
+	echo "[install] Transferring files ..."
+	rsync -avz --progress $IMAGE_DIR/rootfs.img rsync://localhost:6010/root/data/rootfs.img
+	rsync -avz --progress $IMAGE_DIR/system.img rsync://localhost:6010/root/data/system.img
+
+	# Kill running rsync instances
+	adb shell killall rsync
+}
+
+function flash_error() {
+	if ! $1; then
+		echo "Error: Couldn't copy the files to the device, is it connected?"
+	fi
 }
 
 function clean() {
