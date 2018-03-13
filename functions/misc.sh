@@ -62,9 +62,9 @@ function flash_error() {
 }
 
 function debug_variables() {
-	echo "[Debug] rootfs: $ROOTFS_TAR"
-	echo "[Debug] android image: $AND_IMAGE"
-	echo "[Debug] release: $ROOTFS_RELEASE"
-	echo "[Debug] install method: $FLASH_METHOD"
+	echo "[debug] rootfs: $ROOTFS_TAR"
+	echo "[debug] android image: $AND_IMAGE"
+	echo "[debug] release: $ROOTFS_RELEASE"
+	echo "[debug] install method: $FLASH_METHOD"
 	echo
 }
