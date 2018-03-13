@@ -60,3 +60,11 @@ function usage() {
 function flash_error() {
 	echo "Error: Couldn't copy the files to the device, is it connected?"
 }
+
+function debug_variables() {
+	echo "[Debug] rootfs: $ROOTFS_TAR"
+	echo "[Debug] android image: $AND_IMAGE"
+	echo "[Debug] release: $ROOTFS_RELEASE"
+	echo "[Debug] install method: $FLASH_METHOD"
+	echo
+}
