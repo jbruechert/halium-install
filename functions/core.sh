@@ -37,9 +37,11 @@ function flash_adb() {
 }
 
 function flash_rsync() {
+	TARGET_ARCH=$(adb shell uname -m)
+
 	# Download prebuilt rsync
 	echo "[install] Installing rsync on the device ..."
-	! [ -f $IMAGE_DIR/rsync.bin ] && wget -O $IMAGE_DIR/rsync.bin --continue -q "https://github.com/JBBgameich/rsync-static/releases/download/continuous/rsync-arm"
+	! [ -f $IMAGE_DIR/rsync.bin ] && wget -O $IMAGE_DIR/rsync.bin --continue -q "https://github.com/JBBgameich/rsync-static/releases/download/continuous/rsync-$TARGET_ARCH"
 	! [ -f $IMAGE_DIR/rsyncd.conf ] && wget -O $IMAGE_DIR/rsyncd.conf --continue -q "https://raw.githubusercontent.com/JBBgameich/rsync-static/master/rsyncd.conf"
 
 	# Push rsync
