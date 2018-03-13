@@ -56,3 +56,7 @@ function usage() {
 	             defaults : none
 	EOF
 }
+
+function flash_error() {
+	echo "Error: Couldn't copy the files to the device, is it connected?"
+}

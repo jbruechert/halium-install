@@ -59,12 +59,6 @@ function flash_rsync() {
 	adb shell killall rsync
 }
 
-function flash_error() {
-	if ! $1; then
-		echo "Error: Couldn't copy the files to the device, is it connected?"
-	fi
-}
-
 function clean() {
 	# Delete created files from last install
 	sudo rm $ROOTFS_DIR $IMAGE_DIR -rf
