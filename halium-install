@@ -50,6 +50,9 @@ export AND_IMAGE=$2
 export ROOTFS_DIR=$(mktemp -d .halium-install-rootfs.XXXXX)
 export IMAGE_DIR=$(mktemp -d .halium-install-imgs.XXXXX)
 
+# Default to rsync installation
+export FLASH_RSYNC="true"
+
 # Start installer
 echo "Debug: Chosen rootfs is $ROOTFS_TAR"
 echo "Debug: Chosen android image is $AND_IMAGE"
@@ -76,9 +79,9 @@ shrink_images
 
 echo "I: Pushing rootfs and android image to /data"
 if [ $FLASH_ADB ]; then
-	flash_error flash_adb
-else
-	flash_error flash_rsync
+	flash_adb || flash_error
+elif [ $FLASH_RSYNC ]; then
+	flash_rsync || flash_error
 fi
 
 echo "I: Cleaning up host"
