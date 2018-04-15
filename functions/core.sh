@@ -40,3 +40,8 @@ function clean() {
 	# Delete created files from last install
 	sudo rm $ROOTFS_DIR $IMAGE_DIR -rf
 }
+
+function clean_device() {
+	# Make sure the device is in a clean state
+	adb shell sync
+}
