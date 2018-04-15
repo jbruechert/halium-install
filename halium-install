@@ -82,3 +82,7 @@ fi
 echo "I: Cleaning up host"
 clean &
 spinner $!
+
+echo "I: Cleaning up device"
+clean_device &
+spinner $!
