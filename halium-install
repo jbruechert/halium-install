@@ -10,6 +10,13 @@
 #
 # dependencies: qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img
 
+LOCATION=`dirname "$0"`
+
+# Include functions
+source $LOCATION/functions/misc.sh
+source $LOCATION/functions/distributions.sh
+source $LOCATION/functions/core.sh
+
 # Opts parser, to be rewritten
 if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
 	usage
@@ -34,11 +41,6 @@ if [ "$#" -eq 3 ]; then
 else
 	ROOTFS_RELEASE="none"
 fi
-
-# Include functions
-. ./functions/misc.sh
-. ./functions/distributions.sh
-. ./functions/core.sh
 
 # Check for missing dependencies
 if ! init_checks; then
