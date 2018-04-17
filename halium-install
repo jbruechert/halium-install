@@ -10,7 +10,7 @@
 #
 # dependencies: qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img
 
-LOCATION=`dirname "$0"`
+LOCATION="$(dirname "$(readlink -f "$0")")"
 
 # Include functions
 source $LOCATION/functions/misc.sh
