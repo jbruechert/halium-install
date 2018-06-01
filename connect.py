@@ -5,7 +5,7 @@ import sys
 import argparse
 
 def get_rndis_device():
-    rndis_device = subprocess.check_output('sudo dmesg | grep rndis | grep -oh "\w*enp0\w*" | tail -n 1', shell=True).decode()
+    rndis_device = subprocess.check_output("sudo dmesg | grep rndis | grep -oh '\w*enp0\w*' | tail -n 1 | tr -d '\n'", shell=True).decode()
 
     if not rndis_device == "":
         print("* The device seems to be connected as " + rndis_device)
