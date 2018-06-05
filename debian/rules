@@ -1,6 +1,0 @@
-#!/usr/bin/make -f
-
-%:
-	dh $@
-
-export DESTDIR=debian/tmp
