@@ -1,20 +1,6 @@
-sudo: required
-addons:
-  apt:
-    sources:
-    - sourceline: 'deb http://archive.ubuntu.com/ubuntu xenial main restricted multiverse universe'
-    packages:
-    - devscripts
-    - fakeroot
-    - debhelper
-
-before_script:
-    - sudo apt update
-
 script:
-    - dpkg-buildpackage -uc -us
-    - bash utils/appimage.sh
+  - bash utils/standalone.sh
 
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-  - bash upload.sh bin/halium-tool-x86_64.AppImage bin/halium-install-standalone.sh ../halium-tool_*_all.deb
+  - bash upload.sh bin/halium-install-standalone.sh
