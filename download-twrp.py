@@ -11,7 +11,11 @@ dlpagerequest = requests.get("https://eu.dl.twrp.me/" + device)
 
 dlpage = BeautifulSoup(dlpagerequest.content, 'html.parser')
 
-dllinks = dlpage.table.find_all("a")
+try:
+	dllinks = dlpage.table.find_all("a")
+except:
+	print("E: Couldn't find a TWRP image for " + device)
+	sys.exit(1)
 
 dlurl = "https://eu.dl.twrp.me" + dllinks[0]["href"].replace(".html", "")
 
