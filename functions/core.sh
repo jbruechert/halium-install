@@ -37,7 +37,8 @@ function flash_adb() {
 }
 
 function flash_rsync() {
-	TARGET_ARCH=$(adb shell uname -m)
+	TARGET_ARCH="arm"
+	# TODO Make $(adb shell uname -m) work
 
 	# Download prebuilt rsync
 	echo "[install] Installing rsync on the device ..."
