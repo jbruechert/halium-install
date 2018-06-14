@@ -53,13 +53,16 @@ export IMAGE_DIR=$(mktemp -d .halium-install-imgs.XXXXX)
 # Logic that depends on the opts being parsed
 source $LOCATION/functions/distributions.sh
 source $LOCATION/functions/core.sh
+# Default to rsync installation
+
+# Set defaults
+export ${FLASH_METHOD:="rsync"}
+export ${DEBUG:="true"}
+
+# Print out useful debugging information
+[ $DEBUG == "true" ] && debug_variables
 
 # Start installer
-echo "Debug: Chosen rootfs is $ROOTFS_TAR"
-echo "Debug: Chosen android image is $AND_IMAGE"
-echo "Debug: Chosen release is $ROOTFS_RELEASE"
-echo
-
 echo "I: Writing rootfs into mountable image"
 convert_rootfs $IMAGE_SIZE &>/dev/null &
 spinner $!
@@ -78,9 +81,11 @@ spinner $!
 echo "I: Shrinking images"
 shrink_images
 
-echo "I: Pushing rootfs and android image to /data via ADB"
-if ! flash $ROOTFS_RELEASE; then
-	echo "Error: Couldn't copy the files to the device, is it connected?"
+echo "I: Pushing rootfs and android image to /data"
+if [ $FLASH_METHOD == "adb" ]; then
+	flash_adb || flash_error
+elif [ $FLASH_METHOD == "rsync" ]; then
+	flash_rsync || flash_error
 fi
 
 echo "I: Cleaning up host"
