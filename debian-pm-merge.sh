@@ -15,6 +15,23 @@ LOCATION="$(dirname "$(readlink -f "$0")")"
 source $LOCATION/functions/core.sh
 source $LOCATION/functions/distributions.sh
 
+function usage() {
+	cat <<-EOF
+	usage: $0 rootfs.tar[.gz] system.img boot.img distribution
+
+	positional arguments:
+	    rootfs.tar[.gz]
+	    system.img
+	    boot.img
+	EOF
+}
+
+# opts parser
+if [ "$#" -ne 4 ]; then
+	usage
+	exit
+fi
+
 # Essential pathes
 export ROOTFS_DIR="$(mktemp -d .halium-install-rootfs.XXXXX)"
 export IMAGE_DIR="$(readlink -f out/)"
@@ -26,6 +43,7 @@ export IMAGE_DIR="$(readlink -f out/)"
 export ROOTFS_TAR="$(readlink -f $1)"
 export AND_IMAGE="$(readlink -f $2)"
 export BOOT_IMAGE="$(readlink -f $3)"
+export DISTRIBUTION="$4"
 
 # Functions
 function make_flashable() {
@@ -47,12 +65,19 @@ function boot_inject_initrd() {
 }
 
 # Actual start of script
-convert_rootfs 5G
+echo "I: Writing rootfs into image"
+convert_rootfs 2G
+echo "I: Writing android adaptions into image"
 convert_androidimage
+echo "I: Shrinking android image"
 shrink_images
 # Merge images into one
-sudo mv "$IMAGE_DIR/system.img" "$(readlink -f $ROOTFS_DIR/var/lib/lxc/android/)"
-post_install halium
+echo "I: Moving android image into rootfs"
+sudo mv "$IMAGE_DIR/system.img" "$(sudo readlink -f $ROOTFS_DIR/var/lib/lxc/android/)"
+echo "I: Running post-install tasks"
+post_install $DISTRIBUTION
+echo "I: including new initrd"
 boot_inject_initrd
 clean
+echo "I: Creating fastboot image from rootfs image"
 make_flashable
