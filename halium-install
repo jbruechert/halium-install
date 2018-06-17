@@ -41,9 +41,10 @@ else
 fi
 
 # Check for missing dependencies
-if ! init_checks; then
-	exit
-fi
+DEPENDENCIES=(qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img)
+BINARIES=(simg2img qemu-arm-static mkfs.ext4 update-binfmts qemu-img)
+
+init_checks
 
 export ROOTFS_TAR=$1
 export AND_IMAGE=$2

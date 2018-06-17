@@ -14,6 +14,7 @@ LOCATION="$(dirname "$(readlink -f "$0")")"
 # Includes
 source $LOCATION/functions/core.sh
 source $LOCATION/functions/distributions.sh
+source $LOCATION/functions/misc.sh
 
 function usage() {
 	cat <<-EOF
@@ -32,6 +33,12 @@ if [ "$#" -ne 4 ]; then
 	exit
 fi
 
+# Check for missing dependencies
+DEPENDENCIES=(qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img abootimg)
+BINARIES=(simg2img img2simg qemu-arm-static mkfs.ext4 update-binfmts qemu-img e2label abootimg)
+
+init_checks
+
 # Essential pathes
 export ROOTFS_DIR="$(mktemp -d .halium-install-rootfs.XXXXX)"
 export IMAGE_DIR="$(readlink -f out/)"
@@ -46,6 +53,10 @@ export BOOT_IMAGE="$(readlink -f $3)"
 export DISTRIBUTION="$4"
 
 # Functions
+function label_rootfs {
+	sudo e2label $IMAGE_DIR/rootfs.img "system"
+}
+
 function make_flashable() {
 	img2simg "$IMAGE_DIR/rootfs.img" "$IMAGE_DIR/rootfs.sparse.img"
 }
@@ -64,9 +75,19 @@ function boot_inject_initrd() {
 	abootimg -u "$IMAGE_DIR/boot.img" -r "$INITRD" -c "bootsize="
 }
 
+function boot_append_cmdline() {
+	# Update the kernel cmdline, so the initrd is able to detect the system partition
+	OLDCMDLINE="$(abootimg -i $IMAGE_DIR/boot.img | grep cmdline | sed -e 's/^.*cmdline = //') "
+	echo $OLDCMDLINE | grep -q "empty cmdline" && OLDCMDLINE=""
+	NEWCMDLINE="${OLDCMDLINE}${1}"
+
+	abootimg -u $IMAGE_DIR/boot.img -c "cmdline=$NEWCMDLINE"
+}
+
 # Actual start of script
 echo "I: Writing rootfs into image"
 convert_rootfs 2G
+label_rootfs
 echo "I: Writing android adaptions into image"
 convert_androidimage
 echo "I: Shrinking android image"
@@ -78,6 +99,7 @@ echo "I: Running post-install tasks"
 post_install $DISTRIBUTION
 echo "I: including new initrd"
 boot_inject_initrd
+boot_append_cmdline "root=LABEL=system"
 clean
 echo "I: Creating fastboot image from rootfs image"
 make_flashable
