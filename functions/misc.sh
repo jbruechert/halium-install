@@ -5,20 +5,6 @@
 #
 # License: GPLv3
 
-function spinner() {
-	local pid=$1
-	local delay=0.75
-	local spinstr='|/-\'
-	while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
-		local temp=${spinstr#?}
-		printf " [%c]  " "$spinstr"
-		local spinstr=$temp${spinstr%"$temp"}
-		sleep $delay
-		printf "\b\b\b\b\b\b"
-	done
-	printf "\b\b\b\b"
-}
-
 function init_checks() {
 	DEPENDENCIES=(qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img)
 	BINARIES=(simg2img qemu-arm-static mkfs.ext4 update-binfmts qemu-img)
@@ -44,15 +30,17 @@ function init_checks() {
 
 function usage() {
 	cat <<-EOF
-	usage: $0 rootfs.tar[.gz] system.img [release]
+	usage: $0 [-p POSTINSTALL] rootfs.tar[.gz] system.img
+
+	options:
+	    -p POSTINSTALL  run common post installation tasks for release.
+	                    supported: none, halium, pm, ut
+	                    default: none
 
 	positional arguments:
 	    rootfs.tar[.gz]
 	    system.img
 
-	optional arguments:
-	    release: run common post installation tasks for release.
-	             supported: none, halium, pm, ut
-	             defaults : none
 	EOF
 }
+
