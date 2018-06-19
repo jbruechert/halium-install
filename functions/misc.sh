@@ -30,14 +30,17 @@ function init_checks() {
 
 function usage() {
 	cat <<-EOF
-	usage: $0 [-p POSTINSTALL] rootfs.tar[.gz] system.img
 
-	options:
+	Usage: $0 [-p POSTINSTALL] [-v] rootfs.tar[.gz] system.img
+
+	Options:
 	    -p POSTINSTALL  run common post installation tasks for release.
 	                    supported: none, halium, pm, ut
 	                    default: none
 
-	positional arguments:
+	    -v              verbose output.
+
+	Positional arguments:
 	    rootfs.tar[.gz]
 	    system.img
 
