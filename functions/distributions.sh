@@ -36,7 +36,17 @@ function post_install() {
 		return
 	fi
 
-	sudo cp $(command -v qemu-arm-static) $ROOTFS_DIR/usr/bin
+	architecture="$(readelf -h $ROOTFS_DIR/bin/sh | grep Machine | sed -e 's/^.*Machine: //' | xargs)"
+
+	case $architecture in
+	"ARM") qemu="qemu-arm-static" ;;
+	"AArch64") qemu="qemu-aarch64-static" ;;
+	"Intel 80386") qemu="qemu-i386-static" ;;
+	"Advanced Micro Devices X86-64") qemu="qemu-x86_64-static" ;;
+	*) qemu="qemu-arm-static" ;;
+	esac
+
+	sudo cp $(command -v $qemu) $ROOTFS_DIR/usr/bin
 	case "$1" in
 	halium)
 		setup_passwd root
@@ -77,5 +87,5 @@ function post_install() {
 		sudo ln -s /proc/mounts $ROOTFS_DIR/etc/mtab
 		;;
 	esac
-	sudo rm $ROOTFS_DIR/usr/bin/qemu-arm-static
+	sudo rm $ROOTFS_DIR/usr/bin/$qemu
 }
