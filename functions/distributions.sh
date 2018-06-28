@@ -41,8 +41,6 @@ function post_install() {
 	case $architecture in
 	"ARM") qemu="qemu-arm-static" ;;
 	"AArch64") qemu="qemu-aarch64-static" ;;
-	"Intel 80386") qemu="qemu-i386-static" ;;
-	"Advanced Micro Devices X86-64") qemu="qemu-x86_64-static" ;;
 	*) qemu="qemu-arm-static" ;;
 	esac
 
