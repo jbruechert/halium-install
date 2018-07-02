@@ -5,7 +5,7 @@
 
 The difference to the official script from the halium-scripts repository is that this script will prepare the rootfs on your host system instead of on the device. This will make you independent of problems like old TWRP images, no busybox or not-working busyboxes on some devices.
 
-A prebuilt standalone version and AppImage is available [here](https://github.com/JBBgameich/halium-install/releases). Alternatively you can just clone this repository and directly use the script.
+A prebuilt standalone version available [here](https://github.com/JBBgameich/halium-install/releases). Alternatively you can just clone this repository and directly use the script.
 
 ### Dependencies
 
@@ -16,18 +16,14 @@ A prebuilt standalone version and AppImage is available [here](https://github.co
 
 ### Usage:
 
-If you installed from a package, you will have the halium-tool command. The source file for it is called launcher.sh. If you don't want to install this, swap out halium-tool with launcher.sh in the following commands.
-
 Download TWRP:
-`halium-tool twrp $device`
+`./download-twrp.py $device`
 
 Install a halium rootfs and systemimage:
-`halium-tool install <rootfs.tar.gz> <system.img> <mode (halium, pm, none)>`
+`halium-install -p <mode (halium, pm, none)> <rootfs.tar.gz> <system.img>`
 
 Connect to the device:
-`halium-tool connect -p $protocol -u $username`
+`./connect.py -p $protocol -u $username`
 
 ### Standalone version
 If you want to use this shell script independently of this folder, create a standalone script of it by executing `bash utils/standalone.sh`. You will find the executable in bin/halium-install-standalone.sh.
-
-You can also generate an AppImage with most dependencies included (experimental) by running `bash utils/appimage.sh`.
