@@ -70,7 +70,7 @@ function post_install() {
 		echo "enabling SSH ... "
 		sudo sed -i 's/PasswordAuthentication=no/PasswordAuthentication=yes/g' $ROOTFS_DIR/etc/init/ssh.override
 		sudo sed -i 's/manual/start on startup/g' $ROOTFS_DIR/etc/init/ssh.override
-		sudo chroot $ROOTFS_DIR /bin/bash -c '/usr/bin/passwd phablet'
+		setup_passwd phablet
 		echo "[done]"
 
 		sudo mkdir -p $ROOTFS_DIR/android/firmware
