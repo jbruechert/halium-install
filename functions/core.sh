@@ -16,7 +16,7 @@ function convert_rootfs() {
 
 function convert_androidimage() {
 	if file $AND_IMAGE | grep "ext4 filesystem"; then
-		cp system.img $IMAGE_DIR
+		cp $AND_IMAGE $IMAGE_DIR/system.img
 	else
 		simg2img $AND_IMAGE $IMAGE_DIR/system.img
 	fi
