@@ -21,8 +21,11 @@ function init_checks() {
 
 	# if qemu-arm-static exists, a sanely installed update-binfmts
 	# -should- have qemu-arm. try to enable it in case it isnt.
-	if ! sudo update-binfmts --display qemu-arm | grep -q "qemu-arm (enabled)"; then
-		sudo update-binfmts --enable qemu-arm
+	# This is only ran if the update-binfmts command is available
+	if sudo bash -c "command -v update-binfmts" >/dev/null 2>&1; then
+		if ! sudo update-binfmts --display qemu-arm | grep -q "qemu-arm (enabled)"; then
+			sudo update-binfmts --enable qemu-arm
+		fi
 	fi
 
 	return 0
