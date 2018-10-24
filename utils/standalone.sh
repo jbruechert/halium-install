@@ -1,13 +1,19 @@
 #!/bin/bash
+LOCATION="$(dirname "$(readlink -f "$0")")/../"
+echo $LOCATION
 
 if ! [ -d bin ]; then mkdir bin; fi
 cp halium-install bin/halium-install-standalone.sh
 
-# Insert included files directly to make the script work standalone
-sed -i '/.*misc.sh/ r functions/misc.sh' bin/halium-install-standalone.sh
-sed -i '/.*distributions.sh/ r functions/distributions.sh' bin/halium-install-standalone.sh
-sed -i '/.*core.sh/ r functions/core.sh' bin/halium-install-standalone.sh
+insert_file() {
+	PATTERN=$1
+	FILE=$2
 
-sed -i 's/.*misc.sh//g' bin/halium-install-standalone.sh
-sed -i 's/.*distributions.sh//g' bin/halium-install-standalone.sh
-sed -i 's/.*core.sh//g' bin/halium-install-standalone.sh
+	sed -i "/.*${PATTERN}/ r ${FILE}" bin/halium-install-standalone.sh
+	sed -i "s/.*${PATTERN}//g" bin/halium-install-standalone.sh
+}
+
+# Insert included files directly to make the script work standalone
+insert_file misc.sh ${LOCATION}/functions/misc.sh
+insert_file distributions.sh ${LOCATION}/functions/distributions.sh
+insert_file core.sh ${LOCATION}/functions/core.sh
