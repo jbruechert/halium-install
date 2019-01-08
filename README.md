@@ -20,7 +20,7 @@ Download TWRP:
 `./download-twrp.py $device`
 
 Install a halium rootfs and systemimage:
-`halium-install -p <mode (halium, pm, none)> <rootfs.tar.gz> <system.img>`
+`halium-install -p <mode (reference, neon, ut, debian-pm, debian-pm-caf, none)> <rootfs.tar.gz> <system.img>`
 
 Connect to the device:
 `./connect.py -p $protocol -u $username`

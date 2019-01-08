@@ -45,14 +45,34 @@ function post_install() {
 	esac
 
 	sudo cp $(command -v $qemu) $ROOTFS_DIR/usr/bin
+	sudo cp /etc/resolv.conf $ROOTFS_DIR/etc/
 	case "$1" in
-	halium)
+	halium | debian-pm | reference)
 		setup_passwd root
+
+		if sudo chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; id -u phablet" >/dev/null 2>&1; then
+			setup_passwd phablet
+		fi
 
 		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
 		sudo DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; dpkg-reconfigure dropbear-run"
 		;;
-	pm)
+	debian-pm-caf)
+		setup_passwd root
+
+		if sudo chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; id -u phablet" >/dev/null 2>&1; then
+			setup_passwd phablet
+		fi
+
+		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
+		sudo DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; dpkg-reconfigure dropbear-run"
+
+		echo "Adding repository for libhybris platform caf"
+		sudo chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; echo 'deb https://repo.kaidan.im/debpm buster caf' > /etc/apt/sources.list.d/debian-pm.list"
+
+		sudo LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; apt update && apt full-upgrade -y"
+		;;
+	pm | neon)
 		setup_passwd root
 		setup_passwd phablet
 

@@ -6,7 +6,7 @@
 # License: GPLv3
 
 function init_checks() {
-	DEPENDENCIES=(qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img)
+	DEPENDENCIES=(qemu-utils binfmt-support qemu-user-static e2fsprogs sudo simg2img)
 	BINARIES=(simg2img qemu-arm-static mkfs.ext4 qemu-img)
 
 	for bin in ${BINARIES[@]}; do
