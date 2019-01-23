@@ -6,10 +6,10 @@
 # License: GPLv3
 
 case "$ROOTFS_RELEASE" in
-halium)
+halium | reference)
 	IMAGE_SIZE=1G
 	;;
-pm)
+pm | neon | debian-pm | debian-pm-caf)
 	IMAGE_SIZE=2G
 	;;
 ut)
@@ -31,6 +31,10 @@ function setup_passwd() {
 	do_until_success sudo chroot $ROOTFS_DIR passwd $1
 }
 
+function chroot_run() {
+	sudo DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "$@" || exit 1
+}
+
 function post_install() {
 	if [ "$1" == "none" ]; then
 		return
@@ -50,27 +54,27 @@ function post_install() {
 	halium | debian-pm | reference)
 		setup_passwd root
 
-		if sudo chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; id -u phablet" >/dev/null 2>&1; then
+		if chroot_run "id -u phablet" >/dev/null 2>&1; then
 			setup_passwd phablet
 		fi
 
 		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
-		sudo DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; dpkg-reconfigure dropbear-run"
+		chroot_run "dpkg-reconfigure dropbear-run"
 		;;
 	debian-pm-caf)
 		setup_passwd root
 
-		if sudo chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; id -u phablet" >/dev/null 2>&1; then
+		if chroot_run "id -u phablet" >/dev/null 2>&1; then
 			setup_passwd phablet
 		fi
 
 		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
-		sudo DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; dpkg-reconfigure dropbear-run"
+		chroot_run "dpkg-reconfigure dropbear-run"
 
 		echo "Adding repository for libhybris platform caf"
-		sudo chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; echo 'deb https://repo.kaidan.im/debpm buster caf' > /etc/apt/sources.list.d/debian-pm.list"
+		chroot_run "echo 'deb https://repo.kaidan.im/debpm buster caf' > /etc/apt/sources.list.d/debian-pm.list"
 
-		sudo LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "source /etc/environment; apt update && apt full-upgrade -y"
+		chroot_run "apt update && apt full-upgrade -y"
 		;;
 	pm | neon)
 		setup_passwd root
@@ -79,7 +83,7 @@ function post_install() {
 		# cant source /etc/environment
 		# LD_LIBRARY_ ; QML2_IMPORT_ derps
 		# set static path for now
-		sudo DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "dpkg-reconfigure openssh-server"
+		chroot_run "dpkg-reconfigure openssh-server"
 		;;
 	ut)
 		# Adapted from rootstock-ng
