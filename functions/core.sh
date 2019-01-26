@@ -31,6 +31,10 @@ function shrink_images() {
 	[ -f $IMAGE_DIR/system.img ] && sudo resize2fs -p -M $IMAGE_DIR/system.img
 }
 
+function inject_androidimage() {
+	mv $IMAGE_DIR/system.img $ROOTFS_DIR
+}
+
 function unmount() {
 	sudo umount $ROOTFS_DIR
 }

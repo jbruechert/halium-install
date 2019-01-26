@@ -16,7 +16,7 @@ LOCATION="$(dirname "$(readlink -f "$0")")"
 export ROOTFS_RELEASE="none"
 export INSTALL_MODE="img"
 
-function quiet ( ) {
+function quiet () {
     cat > /dev/null
 }
 
@@ -109,6 +109,11 @@ convert_androidimage 2>&1 | $out
 
 echo "I: Running post installation tasks"
 post_install $ROOTFS_RELEASE
+
+if [ "$INSTALL_MODE" = "dir" ]; then
+	echo "I: Injecting android image into rootfs"
+	inject_androidimage
+fi
 
 echo "I: Unmounting images"
 unmount
