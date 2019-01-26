@@ -38,7 +38,7 @@ function usage() {
 
 	Options:
 	    -p POSTINSTALL  run common post installation tasks for release.
-	                    supported: none, halium, pm, ut
+	                    supported: reference, neon, ut, debian-pm, debian-pm-caf, none
 	                    default: none
 
 	    -v              verbose output.

@@ -11,9 +11,12 @@
 # dependencies: qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img
 
 LOCATION="$(dirname "$(readlink -f "$0")")"
-export ROOTFS_RELEASE="none"
 
-function quiet ( ) {
+# Defaults
+export ROOTFS_RELEASE="none"
+export INSTALL_MODE="img"
+
+function quiet () {
     cat > /dev/null
 }
 
@@ -28,10 +31,30 @@ while [ -n "$1" ] ; do
 	"-p")
 		shift
 		export ROOTFS_RELEASE="$1"
+		case $ROOTFS_RELEASE in
+		"halium" | "debian-pm" | "reference" | "debian-pm-caf" | "pm" | "neon" | "ut" | "none")
+			;;
+		*)
+			echo "Unsupported post install release! Exiting now"
+			exit 1
+			;;
+		esac
 		;;
-    "-v")
-        out="cat -"
-        ;;
+	"-m" | "--mode")
+		shift
+		export INSTALL_MODE="$1"
+		case $INSTALL_MODE in
+		"img" | "dir" )
+			;;
+		*)
+			echo "Unsupported install mode! Exiting now"
+			exit 1
+			;;
+		esac
+		;;
+	"-v")
+		out="cat -"
+		;;
 	*)
 		break
 		;;
@@ -70,8 +93,16 @@ echo "Debug: Chosen android image is $AND_IMAGE"
 echo "Debug: Chosen release is $ROOTFS_RELEASE"
 echo
 
-echo "I: Writing rootfs into mountable image"
-convert_rootfs $IMAGE_SIZE 2>&1 | $out
+case "$INSTALL_MODE" in
+"img")
+	echo "I: Writing rootfs into mountable image"
+	convert_rootfs_to_img $IMAGE_SIZE 2>&1 | $out
+	;;
+"dir")
+	echo "I: Extracting rootfs"
+	convert_rootfs_to_dir 2>&1 | $out
+	;;
+esac
 
 echo "I: Writing android image into mountable image"
 convert_androidimage 2>&1 | $out
@@ -79,16 +110,33 @@ convert_androidimage 2>&1 | $out
 echo "I: Running post installation tasks"
 post_install $ROOTFS_RELEASE
 
-echo "I: Unmounting images"
-unmount
+if [ "$INSTALL_MODE" = "dir" ]; then
+	echo "I: Injecting android image into rootfs"
+	inject_androidimage
+fi
+
+if [ "$INSTALL_MODE" = "img" ]; then
+	echo "I: Unmounting images"
+	unmount
+fi
 
 echo "I: Shrinking images"
 shrink_images
 
-echo "I: Pushing rootfs and android image to /data via ADB"
-if ! flash $ROOTFS_RELEASE; then
-	echo "Error: Couldn't copy the files to the device, is it connected?"
-fi
+case "$INSTALL_MODE" in
+"img")
+	echo "I: Pushing rootfs and android image to /data via ADB"
+	if ! flash_img $ROOTFS_RELEASE; then
+		echo "Error: Couldn't copy the files to the device, is it connected?"
+	fi
+	;;
+"dir")
+	echo "I: Pushing rootfs and android image to /data via ADB"
+	if ! flash_dir $ROOTFS_RELEASE; then
+		echo "Error: Couldn't copy the files to the device, is it connected?"
+	fi
+	;;
+esac
 
 echo "I: Cleaning up host"
 clean

@@ -5,12 +5,16 @@
 #
 # License: GPLv3
 
-function convert_rootfs() {
+function convert_rootfs_to_img() {
 	image_size=$1
 
 	qemu-img create -f raw $IMAGE_DIR/rootfs.img $image_size
 	sudo mkfs.ext4 -O ^metadata_csum -O ^64bit -F $IMAGE_DIR/rootfs.img
 	sudo mount $IMAGE_DIR/rootfs.img $ROOTFS_DIR
+	sudo tar -xf $ROOTFS_TAR -C $ROOTFS_DIR
+}
+
+function convert_rootfs_to_dir() {
 	sudo tar -xf $ROOTFS_TAR -C $ROOTFS_DIR
 }
 
@@ -27,13 +31,21 @@ function shrink_images() {
 	[ -f $IMAGE_DIR/system.img ] && sudo resize2fs -p -M $IMAGE_DIR/system.img
 }
 
+function inject_androidimage() {
+	sudo mv $IMAGE_DIR/system.img $ROOTFS_DIR
+}
+
 function unmount() {
 	sudo umount $ROOTFS_DIR
 }
 
-function flash() {
+function flash_img() {
 	adb push $IMAGE_DIR/rootfs.img /data/
 	adb push $IMAGE_DIR/system.img /data/
+}
+
+function flash_dir() {
+	adb push $ROOTFS_DIR/* /data/halium-rootfs/
 }
 
 function clean() {

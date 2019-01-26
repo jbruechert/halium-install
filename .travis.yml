@@ -1,4 +1,5 @@
 script:
+  - bash -n $(find . -name "*.sh") halium-install
   - bash utils/standalone.sh
 
 after_success:
