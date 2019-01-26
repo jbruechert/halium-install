@@ -91,12 +91,13 @@ function post_install() {
 		sudo touch $ROOTFS_DIR/home/phablet/.display-mir
 		echo "[done]"
 
-		echo "enabling SSH ... "
+		echo -n "enabling SSH ... "
 		sudo sed -i 's/PasswordAuthentication=no/PasswordAuthentication=yes/g' $ROOTFS_DIR/etc/init/ssh.override
 		sudo sed -i 's/manual/start on startup/g' $ROOTFS_DIR/etc/init/ssh.override
 		sudo sed -i 's/manual/start on startup/g' $ROOTFS_DIR/etc/init/usb-tethering.conf
-		setup_passwd phablet
 		echo "[done]"
+
+		setup_passwd phablet
 
 		sudo mkdir -p $ROOTFS_DIR/android/firmware
 		sudo mkdir -p $ROOTFS_DIR/android/persist
