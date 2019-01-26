@@ -115,8 +115,10 @@ if [ "$INSTALL_MODE" = "dir" ]; then
 	inject_androidimage
 fi
 
-echo "I: Unmounting images"
-unmount
+if [ "$INSTALL_MODE" = "img" ]; then
+	echo "I: Unmounting images"
+	unmount
+fi
 
 echo "I: Shrinking images"
 shrink_images

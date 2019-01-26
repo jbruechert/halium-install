@@ -32,7 +32,7 @@ function shrink_images() {
 }
 
 function inject_androidimage() {
-	mv $IMAGE_DIR/system.img $ROOTFS_DIR
+	sudo mv $IMAGE_DIR/system.img $ROOTFS_DIR
 }
 
 function unmount() {
