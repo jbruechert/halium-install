@@ -10,6 +10,8 @@
 #
 # dependencies: qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img
 
+set -e # terminate on errors
+
 LOCATION="$(dirname "$(readlink -f "$0")")"
 
 # Defaults

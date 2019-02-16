@@ -32,7 +32,7 @@ function setup_passwd() {
 }
 
 function chroot_run() {
-	sudo DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "$@" || exit 1
+	sudo DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "$@"
 }
 
 function post_install() {
