@@ -85,9 +85,11 @@ function post_install() {
 	case "$1" in
 	halium | debian-pm | reference)
 		setup_passwd root $ROOTPASSWORD
+		copy_ssh_key_root
 
 		if chroot_run "id -u phablet" >/dev/null 2>&1; then
 			setup_passwd phablet $USERPASSWORD
+			copy_ssh_key_phablet
 		fi
 
 		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
@@ -95,9 +97,11 @@ function post_install() {
 		;;
 	debian-pm-caf)
 		setup_passwd root $ROOTPASSWORD
+		copy_ssh_key_root
 
 		if chroot_run "id -u phablet" >/dev/null 2>&1; then
 			setup_passwd phablet $USERPASSWORD
+			copy_ssh_key_phablet
 		fi
 
 		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
@@ -110,7 +114,9 @@ function post_install() {
 		;;
 	pm | neon)
 		setup_passwd root $ROOTPASSWORD
+		copy_ssh_key_root
 		setup_passwd phablet $USERPASSWORD
+		copy_ssh_key_phablet
 
 		# cant source /etc/environment
 		# LD_LIBRARY_ ; QML2_IMPORT_ derps
@@ -130,6 +136,7 @@ function post_install() {
 		echo "[done]"
 
 		setup_passwd phablet $USERPASSWORD
+		copy_ssh_key_phablet
 
 		sudo mkdir -p $ROOTFS_DIR/android/firmware
 		sudo mkdir -p $ROOTFS_DIR/android/persist

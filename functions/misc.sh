@@ -34,7 +34,7 @@ function init_checks() {
 function usage() {
 	cat <<-EOF
 
-	Usage: $0 [-p POSTINSTALL] [-v] [-u USERPASSWORD] [-r ROOTPASSWORD] rootfs.tar[.gz] system.img
+	Usage: $0 [-p POSTINSTALL] [-v] [-u USERPASSWORD] [-r ROOTPASSWORD] [-i] rootfs.tar[.gz] system.img
 
 	Options:
 	    -p POSTINSTALL  run common post installation tasks for release.
@@ -50,6 +50,10 @@ function usage() {
 	    -r ROOTPASSWORD set this passowrd for root user instead of interactively
 	                    asking for a password (does not apply to all POSTINSTALL
 	                    selections).
+
+        -i              copy your ssh public key into the image for password
+                        less login (depending on POSTINSTALL selection for user
+                        root or phablet or both)
 
 	Positional arguments:
 	    rootfs.tar[.gz]
