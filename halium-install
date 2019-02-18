@@ -17,6 +17,8 @@ LOCATION="$(dirname "$(readlink -f "$0")")"
 # Defaults
 export ROOTFS_RELEASE="none"
 export INSTALL_MODE="img"
+export DO_COPY_SSH_KEY=false
+export SSH_KEY=~/.ssh/id_rsa.pub
 
 function quiet () {
     cat > /dev/null
@@ -61,6 +63,9 @@ while [ -n "$1" ] ; do
 	"-r")
 		shift
 		ROOTPASSWORD="$1"
+		;;
+	"-i")
+		DO_COPY_SSH_KEY=true
 		;;
 	"-v")
 		out="cat -"
