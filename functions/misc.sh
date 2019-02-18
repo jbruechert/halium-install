@@ -34,7 +34,7 @@ function init_checks() {
 function usage() {
 	cat <<-EOF
 
-	Usage: $0 [-p POSTINSTALL] [-v] rootfs.tar[.gz] system.img
+	Usage: $0 [-p POSTINSTALL] [-v] [-u USERPASSWORD] [-r ROOTPASSWORD] rootfs.tar[.gz] system.img
 
 	Options:
 	    -p POSTINSTALL  run common post installation tasks for release.
@@ -42,6 +42,14 @@ function usage() {
 	                    default: none
 
 	    -v              verbose output.
+
+	    -u USERPASSWORD set this password for user phablet instead of
+	                    interactively asking for a password (does not apply to
+	                    all POSTINSTALL selections)
+
+	    -r ROOTPASSWORD set this passowrd for root user instead of interactively
+	                    asking for a password (does not apply to all POSTINSTALL
+	                    selections).
 
 	Positional arguments:
 	    rootfs.tar[.gz]
