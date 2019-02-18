@@ -27,8 +27,15 @@ do_until_success() {
 }
 
 function setup_passwd() {
-	echo "Please enter a new password for the '$1' user:"
-	do_until_success sudo chroot $ROOTFS_DIR passwd $1
+	user=$1
+	pass=$2
+	if [ -z "$pass" ] ; then
+		echo "Please enter a new password for the user '$user':"
+		do_until_success sudo chroot $ROOTFS_DIR passwd $user
+	else
+		echo "I: Setting new password for the user '$user'"
+		echo $user:$pass | sudo chroot $ROOTFS_DIR chpasswd
+	fi
 }
 
 function chroot_run() {
@@ -52,20 +59,20 @@ function post_install() {
 	sudo cp /etc/resolv.conf $ROOTFS_DIR/etc/
 	case "$1" in
 	halium | debian-pm | reference)
-		setup_passwd root
+		setup_passwd root $ROOTPASSWORD
 
 		if chroot_run "id -u phablet" >/dev/null 2>&1; then
-			setup_passwd phablet
+			setup_passwd phablet $USERPASSWORD
 		fi
 
 		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
 		chroot_run "dpkg-reconfigure dropbear-run"
 		;;
 	debian-pm-caf)
-		setup_passwd root
+		setup_passwd root $ROOTPASSWORD
 
 		if chroot_run "id -u phablet" >/dev/null 2>&1; then
-			setup_passwd phablet
+			setup_passwd phablet $USERPASSWORD
 		fi
 
 		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
@@ -77,8 +84,8 @@ function post_install() {
 		chroot_run "apt update && apt full-upgrade -y"
 		;;
 	pm | neon)
-		setup_passwd root
-		setup_passwd phablet
+		setup_passwd root $ROOTPASSWORD
+		setup_passwd phablet $USERPASSWORD
 
 		# cant source /etc/environment
 		# LD_LIBRARY_ ; QML2_IMPORT_ derps
@@ -97,7 +104,7 @@ function post_install() {
 		sudo sed -i 's/manual/start on startup/g' $ROOTFS_DIR/etc/init/usb-tethering.conf
 		echo "[done]"
 
-		setup_passwd phablet
+		setup_passwd phablet $USERPASSWORD
 
 		sudo mkdir -p $ROOTFS_DIR/android/firmware
 		sudo mkdir -p $ROOTFS_DIR/android/persist
@@ -113,3 +120,4 @@ function post_install() {
 	esac
 	sudo rm $ROOTFS_DIR/usr/bin/$qemu
 }
+

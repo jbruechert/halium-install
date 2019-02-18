@@ -54,6 +54,14 @@ while [ -n "$1" ] ; do
 			;;
 		esac
 		;;
+	"-u")
+		shift
+		USERPASSWORD="$1"
+		;;
+	"-r")
+		shift
+		ROOTPASSWORD="$1"
+		;;
 	"-v")
 		out="cat -"
 		;;
