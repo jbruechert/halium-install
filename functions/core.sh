@@ -11,11 +11,11 @@ function convert_rootfs_to_img() {
 	qemu-img create -f raw $IMAGE_DIR/rootfs.img $image_size
 	sudo mkfs.ext4 -O ^metadata_csum -O ^64bit -F $IMAGE_DIR/rootfs.img
 	sudo mount $IMAGE_DIR/rootfs.img $ROOTFS_DIR
-	sudo tar -xf $ROOTFS_TAR -C $ROOTFS_DIR
+	sudo tar --numeric-owner -xpf $ROOTFS_TAR -C $ROOTFS_DIR
 }
 
 function convert_rootfs_to_dir() {
-	sudo tar -xf $ROOTFS_TAR -C $ROOTFS_DIR
+	sudo tar --numeric-owner -xpf $ROOTFS_TAR -C $ROOTFS_DIR
 }
 
 function convert_androidimage() {
