@@ -39,7 +39,7 @@ function setup_passwd() {
 }
 
 function chroot_run() {
-	sudo DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "$@"
+	sudo PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "$@"
 }
 
 function copy_ssh_key_root() {
