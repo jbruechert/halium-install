@@ -57,3 +57,9 @@ function clean_device() {
 	# Make sure the device is in a clean state
 	adb shell sync
 }
+
+function clean_exit() {
+	echo "I: Cleaning up because the script exited before it could finish"
+	unmount || true
+	clean || true
+}
