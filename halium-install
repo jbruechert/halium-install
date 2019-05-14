@@ -155,10 +155,3 @@ case "$INSTALL_MODE" in
 	fi
 	;;
 esac
-
-echo "I: Cleaning up host"
-clean
-
-echo "I: Cleaning up device"
-clean_device
-

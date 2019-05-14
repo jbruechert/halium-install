@@ -59,7 +59,8 @@ function clean_device() {
 }
 
 function clean_exit() {
-	echo "I: Cleaning up because the script exited before it could finish"
+	echo "I: Cleaning up"
 	unmount || true
 	clean || true
+	clean_device || true
 }
