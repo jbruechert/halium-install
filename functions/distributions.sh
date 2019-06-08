@@ -31,39 +31,39 @@ function setup_passwd() {
 	pass=$2
 	if [ -z "$pass" ] ; then
 		echo "Please enter a new password for the user '$user':"
-		do_until_success sudo chroot $ROOTFS_DIR passwd $user
+		do_until_success sudo chroot "$ROOTFS_DIR" passwd $user
 	else
 		echo "I: Setting new password for the user '$user'"
-		echo $user:$pass | sudo chroot $ROOTFS_DIR chpasswd
+		echo $user:$pass | sudo chroot "$ROOTFS_DIR" chpasswd
 	fi
 }
 
 function chroot_run() {
-	sudo PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "$@"
+	sudo PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot "$ROOTFS_DIR" /bin/bash -c "$@"
 }
 
 function copy_ssh_key_root() {
 	if $DO_COPY_SSH_KEY ; then
-		D=$ROOTFS_DIR/root/.ssh
+		D="$ROOTFS_DIR/root/.ssh"
 		echo "I: Copying ssh key to the user 'root'"
 
-		sudo mkdir $D
-		sudo tee -a $D/authorized_keys < $SSH_KEY >/dev/null
-		sudo chmod 0700 $D
-		sudo chmod 0600 $D/authorized_keys
+		sudo mkdir "$D"
+		sudo tee -a "$D/authorized_key"s < $SSH_KEY >/dev/null
+		sudo chmod 0700 "$D"
+		sudo chmod 0600 "$D/authorized_keys"
 	fi
 }
 
 function copy_ssh_key_phablet() {
 	if $DO_COPY_SSH_KEY ; then
-		D=$ROOTFS_DIR/home/phablet/.ssh
+		D="$ROOTFS_DIR/home/phablet/.ssh"
 		echo "I: Copying ssh key to the user 'phablet'"
 
-		sudo mkdir $D
-		sudo tee -a $D/authorized_keys < $SSH_KEY >/dev/null
-		sudo chown -R 32011:32011 $D
-		sudo chmod 0700 $D
-		sudo chmod 0600 $D/authorized_keys
+		sudo mkdir "$D"
+		sudo tee -a "$D/authorized_keys" < $SSH_KEY >/dev/null
+		sudo chown -R 32011:32011 "$D"
+		sudo chmod 0700 "$D"
+		sudo chmod 0600 "$D/authorized_keys"
 	fi
 }
 
@@ -80,8 +80,8 @@ function post_install() {
 	*) qemu="qemu-arm-static" ;;
 	esac
 
-	sudo cp $(command -v $qemu) $ROOTFS_DIR/usr/bin
-	sudo cp /etc/resolv.conf $ROOTFS_DIR/etc/
+	sudo cp $(command -v $qemu) "$ROOTFS_DIR/usr/bin"
+	sudo cp /etc/resolv.conf "$ROOTFS_DIR/etc/"
 	case "$1" in
 	halium | debian-pm | reference)
 		setup_passwd root $ROOTPASSWORD
@@ -92,7 +92,7 @@ function post_install() {
 			copy_ssh_key_phablet
 		fi
 
-		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
+		sudo rm -f "$ROOTFS_DIR"/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
 		chroot_run "dpkg-reconfigure dropbear-run"
 		;;
 	debian-pm-caf)
@@ -104,7 +104,7 @@ function post_install() {
 			copy_ssh_key_phablet
 		fi
 
-		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
+		sudo rm -f "$ROOTFS_DIR"/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
 		chroot_run "dpkg-reconfigure dropbear-run"
 
 		echo "Adding repository for libhybris platform caf"
@@ -126,30 +126,30 @@ function post_install() {
 	ut)
 		# Adapted from rootstock-ng
 		echo -n "enabling Mir ... "
-		sudo touch $ROOTFS_DIR/home/phablet/.display-mir
+		sudo touch "$ROOTFS_DIR/home/phablet/.display-mir"
 		echo "[done]"
 
 		echo -n "enabling SSH ... "
-		sudo sed -i 's/PasswordAuthentication=no/PasswordAuthentication=yes/g' $ROOTFS_DIR/etc/init/ssh.override
-		sudo sed -i 's/manual/start on startup/g' $ROOTFS_DIR/etc/init/ssh.override
-		sudo sed -i 's/manual/start on startup/g' $ROOTFS_DIR/etc/init/usb-tethering.conf
+		sudo sed -i 's/PasswordAuthentication=no/PasswordAuthentication=yes/g' "$ROOTFS_DIR/etc/init/ssh.override"
+		sudo sed -i 's/manual/start on startup/g' "$ROOTFS_DIR/etc/init/ssh.override"
+		sudo sed -i 's/manual/start on startup/g' "$ROOTFS_DIR/etc/init/usb-tethering.conf"
 		echo "[done]"
 
 		setup_passwd phablet $USERPASSWORD
 		copy_ssh_key_phablet
 
-		sudo mkdir -p $ROOTFS_DIR/android/firmware
-		sudo mkdir -p $ROOTFS_DIR/android/persist
-		sudo mkdir -p $ROOTFS_DIR/userdata
+		sudo mkdir -p "$ROOTFS_DIR/android/firmware"
+		sudo mkdir -p "$ROOTFS_DIR/android/persist"
+		sudo mkdir -p "$ROOTFS_DIR/userdata"
 		for link in cache data factory firmware persist system odm; do
-			sudo ln -s /android/$link $ROOTFS_DIR/$link
+			sudo ln -s /android/$link "$ROOTFS_DIR/$link"
 		done
-		sudo ln -s /system/lib/modules $ROOTFS_DIR/lib/modules
-		sudo ln -s /android/system/vendor $ROOTFS_DIR/vendor
-		[ -e rootfs/etc/mtab ] && sudo rm $ROOTFS_DIR/etc/mtab
-		sudo ln -s /proc/mounts $ROOTFS_DIR/etc/mtab
+		sudo ln -s /system/lib/modules "$ROOTFS_DIR/lib/modules"
+		sudo ln -s /android/system/vendor "$ROOTFS_DIR/vendor"
+		[ -e rootfs/etc/mtab ] && sudo rm "$ROOTFS_DIR/etc/mtab"
+		sudo ln -s /proc/mounts "$ROOTFS_DIR/etc/mtab"
 		;;
 	esac
-	sudo rm $ROOTFS_DIR/usr/bin/$qemu
+	sudo rm "$ROOTFS_DIR/usr/bin/$qemu"
 }
 

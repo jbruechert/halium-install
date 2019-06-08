@@ -27,7 +27,7 @@ function quiet () {
 out=quiet
 
 # Include functions
-source $LOCATION/functions/misc.sh
+source "$LOCATION/functions/misc.sh"
 
 # parse options
 while [ -n "$1" ] ; do
@@ -83,9 +83,9 @@ if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
 	exit
 fi
 
-export ROOTFS_TAR=$1
-export AND_IMAGE=$2
-if [ ! -f $ROOTFS_TAR ] || [ ! -f $AND_IMAGE ]; then
+export ROOTFS_TAR="$1"
+export AND_IMAGE="$2"
+if [ ! -f "$ROOTFS_TAR" ] || [ ! -f "$AND_IMAGE" ]; then
 	usage
 	exit
 fi
@@ -99,8 +99,8 @@ export ROOTFS_DIR=$(mktemp -d .halium-install-rootfs.XXXXX)
 export IMAGE_DIR=$(mktemp -d .halium-install-imgs.XXXXX)
 
 # Logic that depends on the opts being parsed
-source $LOCATION/functions/distributions.sh
-source $LOCATION/functions/core.sh
+source "$LOCATION/functions/distributions.sh"
+source "$LOCATION/functions/core.sh"
 
 # Always enforce cleanup on exit
 trap clean_exit EXIT
