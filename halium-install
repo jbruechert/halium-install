@@ -70,6 +70,10 @@ while [ -n "$1" ] ; do
 	"-v")
 		out="cat -"
 		;;
+	"-tm" | "--test-mode")
+		# provides an internal test mode
+		TEST_MODE=true
+		;;
 	*)
 		break
 		;;
@@ -95,15 +99,17 @@ if ! init_checks; then
 	exit
 fi
 
-export ROOTFS_DIR=$(mktemp -d .halium-install-rootfs.XXXXX)
-export IMAGE_DIR=$(mktemp -d .halium-install-imgs.XXXXX)
+export ROOTFS_DIR="${ROOTFS_DIR:-$(mktemp -d .halium-install-rootfs.XXXXX)}"
+export IMAGE_DIR="${IMAGE_DIR:-$(mktemp -d .halium-install-imgs.XXXXX)}"
 
 # Logic that depends on the opts being parsed
 source "$LOCATION/functions/distributions.sh"
 source "$LOCATION/functions/core.sh"
 
 # Always enforce cleanup on exit
-trap clean_exit EXIT
+if [ -z ${TEST_MODE} ]; then
+	trap clean_exit EXIT
+fi
 
 # Start installer
 echo "Debug: Chosen rootfs is $ROOTFS_TAR"
@@ -143,17 +149,19 @@ case "$INSTALL_MODE" in
 	;;
 esac
 
-case "$INSTALL_MODE" in
-"img")
-	echo "I: Pushing rootfs and android image to /data via ADB"
-	if ! flash_img; then
-		echo "Error: Couldn't copy the files to the device, is it connected?"
-	fi
-	;;
-"dir")
-	echo "I: Pushing rootfs and android image to /data via ADB"
-	if ! flash_dir; then
-		echo "Error: Couldn't copy the files to the device, is it connected?"
-	fi
-	;;
-esac
+if [ -z ${TEST_MODE} ]; then
+	case "$INSTALL_MODE" in
+	"img")
+		echo "I: Pushing rootfs and android image to /data via ADB"
+		if ! flash_img; then
+			echo "Error: Couldn't copy the files to the device, is it connected?"
+		fi
+		;;
+	"dir")
+		echo "I: Pushing rootfs and android image to /data via ADB"
+		if ! flash_dir; then
+			echo "Error: Couldn't copy the files to the device, is it connected?"
+		fi
+		;;
+	esac
+fi

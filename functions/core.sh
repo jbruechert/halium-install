@@ -53,7 +53,6 @@ function flash_dir() {
 }
 
 function clean() {
-	# Delete created files from last install
 	sudo rm "$ROOTFS_DIR" "$IMAGE_DIR" -rf
 }
 
