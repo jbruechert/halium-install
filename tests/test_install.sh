@@ -24,7 +24,7 @@ fi
 
 if [ ! -f "${ANDROID_IMG_PATH}" ]; then
 	wget --continue \
-		https://archive.kaidan.im/halium/hammerhead/system.img
+		https://archive.kaidan.im/halium/hammerhead/system.img \
 		-O "${ANDROID_IMG_PATH}"
 fi
 
@@ -33,11 +33,15 @@ if [ -d ${ROOTFS_DIR} ]; then
 	sudo chown $(whoami) -R ${ROOTFS_DIR}
 	rm ${ROOTFS_DIR} -rf
 	mkdir -p ${ROOTFS_DIR}
+else
+	mkdir -p ${ROOTFS_DIR}
 fi
 
 if [ -d ${IMAGE_DIR} ]; then
 	rm ${IMAGE_DIR} -r
         mkdir -p ${IMAGE_DIR}
+else
+	mkdir -p ${IMAGE_DIR}
 fi
 
 
