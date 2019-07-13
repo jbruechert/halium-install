@@ -32,7 +32,7 @@ function shrink_images() {
 }
 
 function inject_androidimage() {
-	sudo mv "$IMAGE_DIR/system.img" "$ROOTFS_DIR"
+	sudo mv "$IMAGE_DIR/system.img" "$ROOTFS_DIR/var/lib/lxc/android/"
 }
 
 function unmount() {
