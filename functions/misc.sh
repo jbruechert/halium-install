@@ -6,8 +6,8 @@
 # License: GPLv3
 
 function init_checks() {
-	DEPENDENCIES=(qemu-utils binfmt-support qemu-user-static e2fsprogs sudo simg2img)
-	BINARIES=(simg2img qemu-arm-static mkfs.ext4 qemu-img)
+	DEPENDENCIES=(qemu-utils binfmt-support qemu-user-static e2fsprogs sudo simg2img binutils)
+	BINARIES=(simg2img qemu-arm-static mkfs.ext4 qemu-img readelf)
 
 	for bin in ${BINARIES[@]}; do
 		if ! sudo bash -c "command -v $bin" >/dev/null 2>&1; then
