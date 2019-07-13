@@ -55,6 +55,10 @@ function test_executable() {
 	[ -x "${TEST_LOCATION}/../halium-install" ]
 }
 
+function test_syntax() {
+	bash -n "${TEST_LOCATION}/../halium-install"
+}
+
 # Dir mode
 function test_img_exit_success() {
 	halium-install --test-mode -v -p debian-pm -u 1234 -r 1234 "${ROOTFS_PATH}" "${ANDROID_IMG_PATH}" > "${TMP_PATH}/log" 2>&1
@@ -103,6 +107,7 @@ function test_dir_correct_image_path() {
 
 echo "# Generic tests"
 run_test test_executable
+run_test test_syntax
 
 echo "# Image mode tests"
 run_test test_img_exit_success

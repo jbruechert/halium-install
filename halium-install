@@ -20,7 +20,7 @@ export INSTALL_MODE="img"
 export DO_COPY_SSH_KEY=false
 export SSH_KEY=~/.ssh/id_rsa.pub
 
-function quiet () {
+function quiet() {
     cat > /dev/null
 }
 
