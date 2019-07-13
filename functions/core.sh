@@ -32,7 +32,11 @@ function shrink_images() {
 }
 
 function inject_androidimage() {
+	# Move android image into rootfs location (https://github.com/Halium/initramfs-tools-halium/blob/halium/scripts/halium#L259)
 	sudo mv "$IMAGE_DIR/system.img" "$ROOTFS_DIR/var/lib/lxc/android/"
+
+	# Make sure the mount path is correct
+	sudo sed -i 's,/data/system.img,/var/lib/lxc/android/system.img,g' "$ROOTFS_DIR/lib/systemd/system/system.mount"
 }
 
 function unmount() {

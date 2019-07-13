@@ -128,29 +128,31 @@ convert_androidimage 2>&1 | $out
 echo "I: Running post installation tasks"
 post_install $ROOTFS_RELEASE
 
-if [ "$INSTALL_MODE" = "dir" ]; then
-	echo "I: Injecting android image into rootfs"
-	inject_androidimage
-fi
-
-if [ "$INSTALL_MODE" = "img" ]; then
-	echo "I: Unmounting images"
-	unmount
-fi
-
 echo "I: Shrinking images"
 shrink_images
 
 case "$INSTALL_MODE" in
 "img")
+	# In dir mode, nothing is being mounted, so unmount would fail
+	echo "I: Unmounting images"
+	unmount
+	;;
+"dir")
+	echo "I: Injecting android image into rootfs"
+	inject_androidimage
+	;;
+esac
+
+case "$INSTALL_MODE" in
+"img")
 	echo "I: Pushing rootfs and android image to /data via ADB"
-	if ! flash_img $ROOTFS_RELEASE; then
+	if ! flash_img; then
 		echo "Error: Couldn't copy the files to the device, is it connected?"
 	fi
 	;;
 "dir")
 	echo "I: Pushing rootfs and android image to /data via ADB"
-	if ! flash_dir $ROOTFS_RELEASE; then
+	if ! flash_dir; then
 		echo "Error: Couldn't copy the files to the device, is it connected?"
 	fi
 	;;
