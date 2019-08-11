@@ -83,7 +83,7 @@ function post_install() {
 	sudo cp $(command -v $qemu) "$ROOTFS_DIR/usr/bin"
 	sudo cp /etc/resolv.conf "$ROOTFS_DIR/etc/"
 	case "$1" in
-	halium | debian-pm | reference)
+	halium | reference)
 		setup_passwd root $ROOTPASSWORD
 		copy_ssh_key_root
 
@@ -95,6 +95,20 @@ function post_install() {
 		sudo rm -f "$ROOTFS_DIR"/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
 		chroot_run "dpkg-reconfigure dropbear-run"
 		;;
+	# Dropbear in debian moved from dropbear-run to the dropbear package.
+	# TODO: Remove duplication once reference rootfs and debian-pm are on the same state again.
+	debian-pm)
+		setup_passwd root $ROOTPASSWORD
+		copy_ssh_key_root
+
+		if chroot_run "id -u phablet" >/dev/null 2>&1; then
+			setup_passwd phablet $USERPASSWORD
+			copy_ssh_key_phablet
+		fi
+
+		sudo rm -f "$ROOTFS_DIR"/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
+		chroot_run "dpkg-reconfigure dropbear"
+		;;
 	debian-pm-caf)
 		setup_passwd root $ROOTPASSWORD
 		copy_ssh_key_root
@@ -105,7 +119,7 @@ function post_install() {
 		fi
 
 		sudo rm -f "$ROOTFS_DIR"/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
-		chroot_run "dpkg-reconfigure dropbear-run"
+		chroot_run "dpkg-reconfigure dropbear"
 
 		echo "Adding repository for libhybris platform caf"
 		chroot_run "echo 'deb https://repo.kaidan.im/debpm buster caf' > /etc/apt/sources.list.d/debian-pm.list"

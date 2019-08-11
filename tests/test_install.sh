@@ -63,13 +63,15 @@ function test_syntax() {
 	bash -n "${TEST_LOCATION}/../halium-install"
 }
 
-# Dir mode
+# Image mode
 function test_img_exit_success() {
-	halium-install --test-mode -v -p debian-pm -u 1234 -r 1234 "${ROOTFS_PATH}" "${ANDROID_IMG_PATH}" > "${TMP_PATH}/log" 2>&1
+	halium-install --mode img --test-mode -v -p debian-pm -u 1234 -r 1234 "${ROOTFS_PATH}" "${ANDROID_IMG_PATH}"
 }
 
 function test_mount() {
 	sudo mount "${IMAGE_DIR}/rootfs.img" "${ROOTFS_DIR}"
+
+	[ -f "${ROOTFS_DIR}/bin/sh" ]
 }
 
 function test_root_passwd() {
