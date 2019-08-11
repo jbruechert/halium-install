@@ -65,7 +65,7 @@ function test_syntax() {
 
 # Image mode
 function test_img_exit_success() {
-	halium-install --mode img --test-mode -v -p debian-pm -u 1234 -r 1234 "${ROOTFS_PATH}" "${ANDROID_IMG_PATH}"
+	halium-install --mode img --test-mode -v -p debian-pm -u 1234 -r 1234 "${ROOTFS_PATH}" "${ANDROID_IMG_PATH}" > "${TMP_PATH}/log" 2>&1
 }
 
 function test_mount() {
