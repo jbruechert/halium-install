@@ -55,6 +55,19 @@ function usage() {
 	                    less login (depending on POSTINSTALL selection for user
 	                    root or phablet or both)
 
+	    -m mode
+	    --mode mode
+
+	                    "dir":
+	                        install to a directory on the target device instead of an image.
+	                        This is useful if you want to make full use of the space
+	                        available on the partition.
+	                        Note: This requires support in the initramfs.
+
+	                    "img":
+	                        install to an image on /data. This file system layout is supported
+	                        by all known halium reference initramfs implementations.
+
 	Positional arguments:
 	    rootfs.tar[.gz]
 	    system.img
