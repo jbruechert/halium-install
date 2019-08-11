@@ -10,7 +10,7 @@ halium | reference)
 	IMAGE_SIZE=1G
 	;;
 pm | neon | debian-pm | debian-pm-caf)
-	IMAGE_SIZE=2G
+	IMAGE_SIZE=4G
 	;;
 ut)
 	IMAGE_SIZE=3G
