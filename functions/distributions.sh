@@ -138,11 +138,6 @@ function post_install() {
 		chroot_run "dpkg-reconfigure openssh-server"
 		;;
 	ut)
-		# Adapted from rootstock-ng
-		echo -n "enabling Mir ... "
-		sudo touch "$ROOTFS_DIR/home/phablet/.display-mir"
-		echo "[done]"
-
 		echo -n "enabling SSH ... "
 		sudo sed -i 's/PasswordAuthentication=no/PasswordAuthentication=yes/g' "$ROOTFS_DIR/etc/init/ssh.override"
 		sudo sed -i 's/manual/start on startup/g' "$ROOTFS_DIR/etc/init/ssh.override"
