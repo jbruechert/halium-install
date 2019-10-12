@@ -122,7 +122,7 @@ function post_install() {
 		chroot_run "dpkg-reconfigure dropbear"
 
 		echo "Adding repository for libhybris platform caf"
-		chroot_run "echo 'deb https://repo.kaidan.im/debpm buster caf' > /etc/apt/sources.list.d/debian-pm.list"
+		chroot_run "echo 'deb https://repo.kaidan.im/debpm testing caf' > /etc/apt/sources.list.d/debian-pm.list"
 
 		chroot_run "apt update && apt full-upgrade -y"
 		;;
