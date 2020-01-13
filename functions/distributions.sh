@@ -159,7 +159,7 @@ function post_install() {
 			sudo ln -s /android/$link "$ROOTFS_DIR/$link"
 		done
 		sudo ln -s /system/lib/modules "$ROOTFS_DIR/lib/modules"
-		sudo ln -s /android/system/vendor "$ROOTFS_DIR/vendor"
+		sudo ln -s /android/vendor "$ROOTFS_DIR/vendor"
 		[ -e rootfs/etc/mtab ] && sudo rm "$ROOTFS_DIR/etc/mtab"
 		sudo ln -s /proc/mounts "$ROOTFS_DIR/etc/mtab"
 		;;
