@@ -34,7 +34,7 @@ function init_checks() {
 function usage() {
 	cat <<-EOF
 
-	Usage: $0 [-p POSTINSTALL] [-v] [-u USERPASSWORD] [-r ROOTPASSWORD] [-i] rootfs.tar[.gz] system.img
+	Usage: $0 [-p POSTINSTALL] [-v] [-u USERPASSWORD] [-r ROOTPASSWORD] [-i] [-z] rootfs.tar[.gz] system.img
 
 	Options:
 	    -p POSTINSTALL  run common post installation tasks for release.
@@ -54,6 +54,8 @@ function usage() {
 	    -i              copy your ssh public key into the image for password
 	                    less login (depending on POSTINSTALL selection for user
 	                    root or phablet or both)
+
+	    -z              compress images before pushing them to the device
 
 	    -m mode
 	    --mode mode

@@ -49,8 +49,26 @@ function unmount() {
 }
 
 function flash_img() {
-	adb push "$IMAGE_DIR/rootfs.img" /data/
-	adb push "$IMAGE_DIR/system.img" /data/
+	if $DO_ZIP ; then
+		echo "I:    Compressing rootfs on host"
+		pigz --fast "$IMAGE_DIR/rootfs.img"
+		echo "I:    Pushing rootfs to /data via ADB"
+		adb push "$IMAGE_DIR/rootfs.img.gz" /data/
+		echo "I:    Decompressing rootfs on device"
+		adb shell "gunzip -f /data/rootfs.img.gz"
+
+		echo "I:    Compressing android image on host"
+		pigz --fast "$IMAGE_DIR/system.img"
+		echo "I:    Pushing android image to /data via ADB"
+		adb push "$IMAGE_DIR/system.img.gz" /data/
+		echo "I:    Decompressing android image on device"
+		adb shell "gunzip -f /data/system.img.gz"
+	else
+		echo "I:    Pushing rootfs to /data via ADB"
+		adb push "$IMAGE_DIR/rootfs.img" /data/
+		echo "I:    Pushing android image to /data via ADB"
+		adb push "$IMAGE_DIR/system.img" /data/
+	fi
 }
 
 function flash_dir() {
