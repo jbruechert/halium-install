@@ -14,7 +14,7 @@ insert_file() {
 	sed -i "s/.*${PATTERN}//g" bin/halium-install-standalone.sh
 
 	# No idea why sed randomly started to insert ". Anyway, let's fix it.
-	sed -i '/"/d' bin/halium-install-standalone.sh
+	sed -i '/^"$/d' bin/halium-install-standalone.sh
 }
 
 # Insert included files directly to make the script work standalone
