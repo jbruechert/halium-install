@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/bash -e
+
 LOCATION="$(dirname "$(readlink -f "$0")")/../"
 echo $LOCATION
 
@@ -20,3 +21,6 @@ insert_file() {
 insert_file misc.sh ${LOCATION}/functions/misc.sh
 insert_file distributions.sh ${LOCATION}/functions/distributions.sh
 insert_file core.sh ${LOCATION}/functions/core.sh
+
+# Fail if result is broken
+bash -n bin/halium-install-standalone.sh
