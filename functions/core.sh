@@ -69,6 +69,11 @@ function flash_img() {
 		echo "I:    Pushing android image to /data via ADB"
 		adb push "$IMAGE_DIR/system.img" /data/
 	fi
+
+	if $SYSTEM_AS_ROOT; then
+		echo "I:    Renaming to system-as-root compatible system image"
+		adb shell "mv /data/system.img /data/android-rootfs.img"
+	fi
 }
 
 function flash_dir() {

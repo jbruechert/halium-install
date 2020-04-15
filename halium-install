@@ -20,6 +20,7 @@ export INSTALL_MODE="img"
 export DO_COPY_SSH_KEY=false
 export SSH_KEY=~/.ssh/id_rsa.pub
 export DO_ZIP=false
+export SYSTEM_AS_ROOT=false
 
 function quiet() {
     cat > /dev/null
@@ -77,6 +78,9 @@ while [ -n "$1" ] ; do
 		;;
 	"-z")
 		DO_ZIP=true
+		;;
+	"-s" | "--system-as-root")
+		SYSTEM_AS_ROOT=true
 		;;
 	*)
 		break

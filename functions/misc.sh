@@ -70,6 +70,11 @@ function usage() {
 	                        install to an image on /data. This file system layout is supported
 	                        by all known halium reference initramfs implementations.
 
+	    -s
+	    --system-as-root
+                        install the system image as system-as-root compatible.
+                        This requires support in the initramfs implementation.
+
 	Positional arguments:
 	    rootfs.tar[.gz]
 	    system.img
