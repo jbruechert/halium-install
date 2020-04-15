@@ -155,7 +155,7 @@ function post_install() {
 		sudo mkdir -p "$ROOTFS_DIR/android/firmware"
 		sudo mkdir -p "$ROOTFS_DIR/android/persist"
 		sudo mkdir -p "$ROOTFS_DIR/userdata"
-		for link in cache data factory firmware persist system odm; do
+		for link in cache data factory firmware persist system odm product metadata; do
 			sudo ln -s /android/$link "$ROOTFS_DIR/$link"
 		done
 		sudo ln -s /system/lib/modules "$ROOTFS_DIR/lib/modules"
