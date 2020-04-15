@@ -72,8 +72,8 @@ function usage() {
 
 	    -s
 	    --system-as-root
-                        install the system image as system-as-root compatible.
-                        This requires support in the initramfs implementation.
+	                    install the system image as system-as-root compatible.
+	                    This requires support in the initramfs implementation.
 
 	Positional arguments:
 	    rootfs.tar[.gz]
