@@ -155,7 +155,10 @@ function post_install() {
 		done
 		sudo ln -s /system/lib/modules "$ROOTFS_DIR/lib/modules"
 		sudo ln -s /android/system/vendor "$ROOTFS_DIR/vendor"
-		[ -e "$ROOTFS_DIR/etc/mtab" ] && sudo rm "$ROOTFS_DIR/etc/mtab"
+
+		if [ -e "$ROOTFS_DIR/etc/mtab" ] || [ -L "$ROOTFS_DIR/etc/mtab" ]; then
+			sudo rm "$ROOTFS_DIR/etc/mtab"
+		fi
 		sudo ln -s /proc/mounts "$ROOTFS_DIR/etc/mtab"
 		;;
 	esac
