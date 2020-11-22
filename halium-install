@@ -22,11 +22,14 @@ export SSH_KEY=~/.ssh/id_rsa.pub
 export DO_ZIP=false
 export SYSTEM_AS_ROOT=false
 
-function quiet() {
-    cat > /dev/null
-}
-
-out=quiet
+# create file descriptor 4 and redirect to /dev/null
+exec 4> /dev/null
+# functions below are executed like this:
+#   do_something param1 param2 >&4 2>&1
+# >&4 means standard output of do_something() is redirected to file descriptor 4, and
+# 2>&1 means, afterwards standard error is redirected to standard out, i.e., also fd 4
+# so, by default we see neither std out nor std err of the function.
+# the commandline option -v changes file descriptor 4 to be the actual standard output
 
 # Include functions
 source "$LOCATION/functions/misc.sh"
@@ -70,7 +73,7 @@ while [ -n "$1" ] ; do
 		DO_COPY_SSH_KEY=true
 		;;
 	"-v")
-		out="cat -"
+		exec 4>&1 # redirect file descriptor 4 to stdout (1)
 		;;
 	"-tm" | "--test-mode")
 		# provides an internal test mode
@@ -120,25 +123,25 @@ if [ -z ${TEST_MODE} ]; then
 fi
 
 # Start installer
-echo "Debug: Chosen rootfs is $ROOTFS_TAR"
-echo "Debug: Chosen android image is $AND_IMAGE"
-echo "Debug: Chosen release is $ROOTFS_RELEASE"
-echo "Debug: Compress images before pushing: $DO_ZIP"
+echo "D: Chosen rootfs is $ROOTFS_TAR"
+echo "D: Chosen android image is $AND_IMAGE"
+echo "D: Chosen release is $ROOTFS_RELEASE"
+echo "D: Compress images before pushing: $DO_ZIP"
 echo
 
 case "$INSTALL_MODE" in
 "img")
 	echo "I: Writing rootfs into mountable image"
-	convert_rootfs_to_img $IMAGE_SIZE 2>&1 | $out
+	convert_rootfs_to_img $IMAGE_SIZE >&4 2>&1
 	;;
 "dir")
 	echo "I: Extracting rootfs"
-	convert_rootfs_to_dir 2>&1 | $out
+	convert_rootfs_to_dir >&4 2>&1
 	;;
 esac
 
 echo "I: Writing android image into mountable image"
-convert_androidimage 2>&1 | $out
+convert_androidimage >&4 2>&1
 
 echo "I: Running post installation tasks"
 post_install $ROOTFS_RELEASE
@@ -174,3 +177,4 @@ if [ -z ${TEST_MODE} ]; then
 		;;
 	esac
 fi
+
