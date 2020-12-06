@@ -151,15 +151,14 @@ function post_install() {
 		sudo mkdir -p "$ROOTFS_DIR/android/persist"
 		sudo mkdir -p "$ROOTFS_DIR/userdata"
 		for link in cache data factory firmware persist system odm product metadata; do
-			sudo ln -s /android/$link "$ROOTFS_DIR/$link"
+			[ ! -L "$ROOTFS_DIR/$link" ] && sudo ln -s /android/$link "$ROOTFS_DIR/$link"
 		done
 		sudo ln -s /system/lib/modules "$ROOTFS_DIR/lib/modules"
-		sudo ln -s /android/system/vendor "$ROOTFS_DIR/vendor"
-
+		[ ! -L "$ROOTFS_DIR/vendor" ] && sudo ln -s /android/system/vendor "$ROOTFS_DIR/vendor"
 		if [ -e "$ROOTFS_DIR/etc/mtab" ] || [ -L "$ROOTFS_DIR/etc/mtab" ]; then
 			sudo rm "$ROOTFS_DIR/etc/mtab"
 		fi
-		sudo ln -s /proc/mounts "$ROOTFS_DIR/etc/mtab"
+		[ ! -L "$ROOTFS_DIR/etc/mtab" ] && sudo ln -s /proc/mounts "$ROOTFS_DIR/etc/mtab"
 		;;
 	esac
 	sudo rm "$ROOTFS_DIR/usr/bin/$qemu"
