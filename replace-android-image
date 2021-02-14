@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# Defaults
+export SYSTEM_AS_ROOT=false
+
+# Parse cmdline options
+while [ -n "$1" ] ; do
+        case "$1" in
+        "-s" | "--system-as-root")
+                SYSTEM_AS_ROOT=true
+                ;;
+        *)
+                break
+                ;;
+        esac
+        shift
+done
+
+# Wait until the adb shell is unavailable, meaning the device is rebooting
+wait_for_reboot() {
+    while test -n "$(adb shell echo '1' 2>/dev/null)"
+    do
+        echo -n ".";
+        sleep 3;
+    done
+    echo
+}
+
+#wait until we get a working adb shell, meaning the device is in normal or recovery mode
+wait_for_device() {
+    while test -z "$(adb shell echo '1' 2>/dev/null)"
+    do
+        echo -n ".";
+        sleep 3;
+    done
+    echo
+}
+
+SYSTEM_IMAGE=$1
+
+echo "Using system image: $SYSTEM_IMAGE"
+
+if [ ! -f "$SYSTEM_IMAGE" ]; then
+    echo "Usage: $0 system.img"
+    exit
+fi
+
+wait_for_device
+
+adb shell "ls /data"
+
+if file $SYSTEM_IMAGE | grep -v ": Linux rev 1.0" >/dev/null; then
+    echo "Converting from sparse ext4 image to mountable ext4 image"
+    simg2img $SYSTEM_IMAGE tmp.img >/dev/null && resize2fs -M tmp.img >/dev/null 2>&1 && mv tmp.img $SYSTEM_IMAGE
+fi
+
+echo Pushing android system image...
+adb push $SYSTEM_IMAGE /data/system.img >/dev/null 2>&1 &
+
+SIZE=$(stat -t $SYSTEM_IMAGE |awk '{print $2}')
+S=0
+while test $S -lt $SIZE
+do
+    sleep 1
+    S=$(adb shell stat -t /data/system.img | awk '{print $2}')
+    printf "%0.2d%%\r" $[100*$S/$SIZE]
+done
+
+if $SYSTEM_AS_ROOT; then
+    echo "Renaming to system-as-root compatible system image"
+    adb shell "mv /data/system.img /data/android-rootfs.img"
+fi
+
+
+echo "Done, rebooting to Halium"
+
+adb shell "ls /data"
+
+#adb reboot
+
+# vim: expandtab: ts=4: sw=4
+
