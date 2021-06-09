@@ -72,6 +72,11 @@ while [ -n "$1" ] ; do
 	"-i")
 		DO_COPY_SSH_KEY=true
 		;;
+	"-k")
+		shift
+		SSH_KEY="$1"
+		DO_COPY_SSH_KEY=true
+		;;
 	"-v")
 		exec 4>&1 # redirect file descriptor 4 to stdout (1)
 		;;

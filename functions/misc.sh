@@ -55,6 +55,8 @@ function usage() {
 	                    less login (depending on POSTINSTALL selection for user
 	                    root or phablet or both)
 
+	    -k              specify ssh public key file to be copied. Imply -i.
+
 	    -z              compress images before pushing them to the device
 
 	    -m mode
