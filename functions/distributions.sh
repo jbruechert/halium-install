@@ -12,7 +12,7 @@ halium | reference)
 pm | neon | debian-pm | debian-pm-caf)
 	IMAGE_SIZE=4G
 	;;
-ut)
+ut | ut20.04)
 	IMAGE_SIZE=3G
 	;;
 none)
@@ -137,11 +137,15 @@ function post_install() {
 		# set static path for now
 		chroot_run "dpkg-reconfigure openssh-server"
 		;;
-	ut)
+	ut | ut20.04)
 		echo -n "enabling SSH ... "
-		sudo sed -i 's/PasswordAuthentication=no/PasswordAuthentication=yes/g' "$ROOTFS_DIR/etc/init/ssh.override"
-		sudo sed -i 's/manual/start on startup/g' "$ROOTFS_DIR/etc/init/ssh.override"
-		sudo sed -i 's/manual/start on startup/g' "$ROOTFS_DIR/etc/init/usb-tethering.conf"
+		if [ "$1" = ut ]; then
+			sudo sed -i 's/PasswordAuthentication=no/PasswordAuthentication=yes/g' "$ROOTFS_DIR/etc/init/ssh.override"
+			sudo sed -i 's/manual/start on startup/g' "$ROOTFS_DIR/etc/init/ssh.override"
+			sudo sed -i 's/manual/start on startup/g' "$ROOTFS_DIR/etc/init/usb-tethering.conf"
+		else
+			chroot_run "systemctl enable ssh.service usb-tethering.service" 1>&4
+		fi
 		echo "[done]"
 
 		setup_passwd phablet $USERPASSWORD

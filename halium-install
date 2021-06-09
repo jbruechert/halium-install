@@ -41,7 +41,7 @@ while [ -n "$1" ] ; do
 		shift
 		export ROOTFS_RELEASE="$1"
 		case $ROOTFS_RELEASE in
-		"halium" | "debian-pm" | "reference" | "debian-pm-caf" | "pm" | "neon" | "ut" | "none")
+		"halium" | "debian-pm" | "reference" | "debian-pm-caf" | "pm" | "neon" | "ut" | "ut20.04" | "none")
 			;;
 		*)
 			echo "Unsupported post install release! Exiting now"
